@@ -1,7 +1,9 @@
 <?php
 
+use dokuwiki\Input\Input;
+
 /**
- * Tests for the Input class
+ * Tests for the dokuwiki\Input\Input class
  */
 class input_test extends DokuWikiTest {
 
@@ -14,7 +16,57 @@ class input_test extends DokuWikiTest {
         'empty'  => '',
         'emptya' => array(),
         'do'     => array('save' => 'Speichern'),
+
     );
+
+    /**
+     * custom filter function
+     *
+     * @param $string
+     * @return mixed
+     */
+    public function myfilter($string) {
+        $string = str_replace('foo', 'bar', $string);
+        $string = str_replace('baz', '', $string);
+        return $string;
+    }
+
+    public function test_filter() {
+        $_GET     = array(
+            'foo'    => 'foo',
+            'zstring'=> "foo\0bar",
+            'znull'  => "\0",
+            'zint'   => '42'."\0".'42',
+            'zintbaz'=> "baz42",
+        );
+        $_POST    = $_GET;
+        $_REQUEST = $_GET;
+        $INPUT    = new Input();
+
+        $filter = array($this,'myfilter');
+
+        $this->assertNotSame('foobar', $INPUT->str('zstring'));
+        $this->assertSame('foobar', $INPUT->filter()->str('zstring'));
+        $this->assertSame('bar', $INPUT->filter($filter)->str('foo'));
+        $this->assertSame('bar', $INPUT->filter()->str('znull', 'bar', true));
+        $this->assertNotSame('foobar', $INPUT->str('zstring')); // make sure original input is unmodified
+
+        $this->assertNotSame('foobar', $INPUT->get->str('zstring'));
+        $this->assertSame('foobar', $INPUT->get->filter()->str('zstring'));
+        $this->assertSame('bar', $INPUT->get->filter($filter)->str('foo'));
+        $this->assertSame('bar', $INPUT->get->filter()->str('znull', 'bar', true));
+        $this->assertNotSame('foobar', $INPUT->get->str('zstring')); // make sure original input is unmodified
+
+        $this->assertNotSame(4242, $INPUT->int('zint'));
+        $this->assertSame(4242, $INPUT->filter()->int('zint'));
+        $this->assertSame(42, $INPUT->filter($filter)->int('zintbaz'));
+        $this->assertSame(42, $INPUT->filter()->str('znull', 42, true));
+
+        $this->assertSame(true, $INPUT->bool('znull'));
+        $this->assertSame(false, $INPUT->filter()->bool('znull'));
+
+        $this->assertSame('foobar', $INPUT->filter()->valid('zstring', array('foobar', 'bang')));
+    }
 
     public function test_str() {
         $_REQUEST      = $this->data;
@@ -175,12 +227,12 @@ class input_test extends DokuWikiTest {
         $INPUT    = new Input();
 
         $INPUT->remove('string');
-        $this->assertNull($_REQUEST['string']);
-        $this->assertNull($_POST['string']);
-        $this->assertNull($_GET['string']);
+        $this->assertArrayNotHasKey('string', $_REQUEST);
+        $this->assertArrayNotHasKey('string', $_POST);
+        $this->assertArrayNotHasKey('string', $_GET);
 
         $INPUT->post->remove('int');
-        $this->assertNull($_POST['int']);
+        $this->assertArrayNotHasKey('int', $_POST);
         $this->assertEquals(17, $_GET['int']);
         $this->assertEquals(17, $_REQUEST['int']);
     }
@@ -193,13 +245,13 @@ class input_test extends DokuWikiTest {
 
         $INPUT->set('test','foo');
         $this->assertEquals('foo',$_REQUEST['test']);
-        $this->assertNull($_POST['test']);
-        $this->assertNull($_GET['test']);
+        $this->assertArrayNotHasKey('test', $_POST);
+        $this->assertArrayNotHasKey('test', $_GET);
 
         $INPUT->get->set('test2','foo');
         $this->assertEquals('foo',$_GET['test2']);
         $this->assertEquals('foo',$_REQUEST['test2']);
-        $this->assertNull($_POST['test']);
+        $this->assertArrayNotHasKey('test2', $_POST);
     }
 
     public function test_ref(){
@@ -212,6 +264,25 @@ class input_test extends DokuWikiTest {
         $this->assertEquals('foo',$test);
         $_REQUEST['string'] = 'bla';
         $this->assertEquals('bla',$test);
+    }
+
+    public function test_valid(){
+        $_REQUEST = $this->data;
+        $_POST    = $this->data;
+        $_GET     = $this->data;
+        $INPUT    = new Input();
+
+        $valids = array(17, 'foo');
+        $this->assertSame(null, $INPUT->valid('nope', $valids));
+        $this->assertSame('bang', $INPUT->valid('nope', $valids, 'bang'));
+        $this->assertSame(17, $INPUT->valid('int', $valids));
+        $this->assertSame('foo', $INPUT->valid('string', $valids));
+        $this->assertSame(null, $INPUT->valid('array', $valids));
+
+        $valids = array(true);
+        $this->assertSame(true, $INPUT->valid('string', $valids));
+        $this->assertSame(true, $INPUT->valid('one', $valids));
+        $this->assertSame(null, $INPUT->valid('zero', $valids));
     }
 
     public function test_extract(){

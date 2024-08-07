@@ -2,7 +2,8 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
+ * @author Guy Yakobovitch <guy.yakobovitch@gmail.com>
  * @author גיא שפר <guysoft@ort.org.il>
  * @author Denis Simakov <akinoame1@gmail.com>
  * @author Dotan Kamber <kamberd@yahoo.com>
@@ -13,6 +14,9 @@
  * @author alex <ralexay@gmail.com>
  * @author matt carroll <matt.carroll@gmail.com>
  * @author tomer <tomercarolldergicz@gmail.com>
+ * @author itsho <itsho.itsho@gmail.com>
+ * @author Menashe Tomer <menashesite@gmail.com>
+ * @author sagi <sagiyosef@gmail.com>
  */
 $lang['encoding']              = 'utf-8';
 $lang['direction']             = 'rtl';
@@ -44,7 +48,6 @@ $lang['btn_update']            = 'עדכון';
 $lang['btn_delete']            = 'מחיקה';
 $lang['btn_back']              = 'חזרה';
 $lang['btn_backlink']          = 'קישורים לכאן';
-$lang['btn_backtomedia']       = 'חזרה לבחירת קובץ מדיה';
 $lang['btn_subscribe']         = 'מעקב אחרי שינוים';
 $lang['btn_profile']           = 'עדכון הפרופיל';
 $lang['btn_reset']             = 'איפוס';
@@ -57,7 +60,9 @@ $lang['btn_register']          = 'הרשמה';
 $lang['btn_apply']             = 'ליישם';
 $lang['btn_media']             = 'מנהל המדיה';
 $lang['btn_deleteuser']        = 'להסיר את החשבון שלי';
-$lang['loggedinas']            = 'נכנסת בשם';
+$lang['btn_img_backto']        = 'חזרה אל %s';
+$lang['btn_mediaManager']      = 'צפה במנהל מדיה';
+$lang['loggedinas']            = 'נכנסת בשם:';
 $lang['user']                  = 'שם משתמש';
 $lang['pass']                  = 'ססמה';
 $lang['newpass']               = 'ססמה חדשה';
@@ -76,6 +81,7 @@ $lang['regmissing']            = 'עליך למלא את כל השדות, עמך
 $lang['reguexists']            = 'משתמש בשם זה כבר נרשם, עמך הסליחה.';
 $lang['regsuccess']            = 'ההרשמה הצליחה, המשתמש נרשם והודעה נשלחה בדוא״ל.';
 $lang['regsuccess2']           = 'ההרשמה הצליחה, המשתמש נוצר.';
+$lang['regfail']               = 'אין אפשרות ליצור את המשתמש';
 $lang['regmailfail']           = 'שליחת הודעת הדוא״ל כשלה, נא ליצור קשר עם מנהל האתר!';
 $lang['regbadmail']            = 'יתכן כי כתובת הדוא״ל אינה תקפה, אם לא כך הדבר ליצור קשר עם מנהל האתר';
 $lang['regbadpass']            = 'שתי הססמאות אינן זהות זו לזו, נא לנסות שוב.';
@@ -90,6 +96,7 @@ $lang['profdeleteuser']        = 'הסר חשבון';
 $lang['profdeleted']           = 'חשבון המשתמש שלך נמחק מויקי זה';
 $lang['profconfdelete']        = 'ברצוני להסיר את החשבון שלי מוויקי זה. <br/> לא ניתן לבטל פעולה זו.';
 $lang['profconfdeletemissing'] = 'תיבת אישור אינו מסומן';
+$lang['proffail']              = 'פרופיל המשתמש לא עודכן';
 $lang['pwdforget']             = 'שכחת את הססמה שלך? ניתן לקבל חדשה';
 $lang['resendna']              = 'הוויקי הזה אינו תומך בחידוש ססמה';
 $lang['resendpwd']             = 'הגדר סיסמא חדשה בעבור';
@@ -102,12 +109,12 @@ $lang['license']               = 'למעט מקרים בהם צוין אחרת, 
 $lang['licenseok']             = 'נא לשים לב: עריכת דף זה מהווה הסכמה מצדך להצגת התוכן שהוספת בהתאם הרישיון הבא:';
 $lang['searchmedia']           = 'חיפוש שם קובץ:';
 $lang['searchmedia_in']        = 'חיפוש תחת %s';
-$lang['txt_upload']            = 'בחירת קובץ להעלות';
-$lang['txt_filename']          = 'העלאה בשם (נתון לבחירה)';
+$lang['txt_upload']            = 'בחירת קובץ להעלות:';
+$lang['txt_filename']          = 'העלאה בשם (נתון לבחירה):';
 $lang['txt_overwrt']           = 'שכתוב על קובץ קיים';
-$lang['maxuploadsize']         = 'העלה מקסימום. s% לכל קובץ.';
-$lang['lockedby']              = 'נעול על ידי';
-$lang['lockexpire']            = 'הנעילה פגה';
+$lang['maxuploadsize']         = 'העלה מקסימום. %s לכל קובץ.';
+$lang['lockedby']              = 'נעול על ידי:';
+$lang['lockexpire']            = 'הנעילה פגה:';
 $lang['js']['willexpire']      = 'הנעילה תחלוף עוד זמן קצר. \nלמניעת התנגשויות יש להשתמש בכפתור הרענון מטה כדי לאפס את מד משך הנעילה.';
 $lang['js']['notsavedyet']     = 'שינויים שלא נשמרו ילכו לאיבוד.';
 $lang['js']['searchmedia']     = 'חיפוש אחר קבצים';
@@ -153,7 +160,6 @@ $lang['js']['media_overwrt']   = 'שכתב קבצים קיימים';
 $lang['rssfailed']             = 'אירע כשל בעת קבלת הזנה זו:';
 $lang['nothingfound']          = 'לא נמצאו תוצאות.';
 $lang['mediaselect']           = 'קובצי מדיה';
-$lang['fileupload']            = 'העלאת קובצי מדיה';
 $lang['uploadsucc']            = 'ההעלאה הושלמה בהצלחה';
 $lang['uploadfail']            = 'אירעה שגיאה בעת העלאת הקובץ. היתכן שתקלה זו נוצרה עקב הרשאות שגיות?';
 $lang['uploadwrong']           = 'ההעלאה לא אושרה. קבצים בסיומת זו אסורים!';
@@ -187,17 +193,22 @@ $lang['difflink']              = 'קישור לתצוגה השוואה זו';
 $lang['diff_type']             = 'הצגת הבדלים:';
 $lang['diff_inline']           = 'באותה השורה';
 $lang['diff_side']             = 'זה לצד זה';
+$lang['diffprevrev']           = 'הגירסה הקודמת';
+$lang['diffnextrev']           = 'הגירסה הבאה';
+$lang['difflastrev']           = 'הגירסה האחרונה';
+$lang['diffbothprevrev']       = 'גירסה קודמת בשני הצדדים';
+$lang['diffbothnextrev']       = 'הגירסה הבאה בשני הצדדים';
 $lang['line']                  = 'שורה';
-$lang['breadcrumb']            = 'ביקורים אחרונים';
-$lang['youarehere']            = 'זהו מיקומך';
-$lang['lastmod']               = 'מועד השינוי האחרון';
+$lang['breadcrumb']            = 'ביקורים אחרונים:';
+$lang['youarehere']            = 'זהו מיקומך:';
+$lang['lastmod']               = 'מועד השינוי האחרון:';
 $lang['by']                    = 'על ידי';
 $lang['deleted']               = 'נמחק';
 $lang['created']               = 'נוצר';
 $lang['restored']              = 'שוחזר (%s)';
 $lang['external_edit']         = 'עריכה חיצונית';
 $lang['summary']               = 'תקציר העריכה';
-$lang['noflash']               = '<a href="http://www.adobe.com/products/flashplayer/">תוסף פלאש לדפדפן</a> נדרש כדי להציג תוכן זה.';
+$lang['noflash']               = '<a href="http://get.adobe.com/flashplayer">תוסף פלאש לדפדפן</a> נדרש כדי להציג תוכן זה.';
 $lang['download']              = 'הורדת מקטע';
 $lang['tools']                 = 'כלים';
 $lang['user_tools']            = 'כלים של משתמש';
@@ -239,24 +250,21 @@ $lang['qb_sig']                = 'הוספת חתימה';
 $lang['qb_smileys']            = 'חייכנים';
 $lang['qb_chars']              = 'תווים מיוחדים';
 $lang['upperns']               = 'מעבר למרחב השם שברמה שמעל הנוכחית';
-$lang['admin_register']        = 'הוספת משתמש חדש';
 $lang['metaedit']              = 'עריכת נתוני העל';
 $lang['metasaveerr']           = 'אירע כשל בשמירת נתוני העל';
 $lang['metasaveok']            = 'נתוני העל נשמרו';
-$lang['img_backto']            = 'חזרה אל';
-$lang['img_title']             = 'שם';
-$lang['img_caption']           = 'כותרת';
-$lang['img_date']              = 'תאריך';
-$lang['img_fname']             = 'שם הקובץ';
-$lang['img_fsize']             = 'גודל';
-$lang['img_artist']            = 'צלם';
-$lang['img_copyr']             = 'זכויות יוצרים';
-$lang['img_format']            = 'מבנה';
-$lang['img_camera']            = 'מצלמה';
-$lang['img_keywords']          = 'מילות מפתח';
-$lang['img_width']             = 'רוחב';
-$lang['img_height']            = 'גובה';
-$lang['img_manager']           = 'צפה במנהל מדיה';
+$lang['img_title']             = 'שם:';
+$lang['img_caption']           = 'כותרת:';
+$lang['img_date']              = 'תאריך:';
+$lang['img_fname']             = 'שם הקובץ:';
+$lang['img_fsize']             = 'גודל:';
+$lang['img_artist']            = 'צלם:';
+$lang['img_copyr']             = 'זכויות יוצרים:';
+$lang['img_format']            = 'מבנה:';
+$lang['img_camera']            = 'מצלמה:';
+$lang['img_keywords']          = 'מילות מפתח:';
+$lang['img_width']             = 'רוחב:';
+$lang['img_height']            = 'גובה:';
 $lang['subscr_subscribe_success'] = '%s נוסף לרשימת המינויים לדף %s';
 $lang['subscr_subscribe_error'] = 'אירעה שגיאה בהוספת %s לרשימת המינויים לדף %s';
 $lang['subscr_subscribe_noaddress'] = 'אין כתובת המשויכת עם הכניסה שלך, נא ניתן להוסיף אותך לרשימת המינויים';
@@ -274,7 +282,6 @@ $lang['subscr_style_every']    = 'דוא״ל עם כל שינוי';
 $lang['subscr_style_digest']   = 'הודעת דוא״ל המציגה את כל השינויים בכל עמוד (בכל %.2f ימים)';
 $lang['subscr_style_list']     = 'רשימת השינויים בדפים מאז הודעת הדוא״ל האחרונה (בכל %.2f ימים)';
 $lang['authtempfail']          = 'אימות משתמשים אינו זמין כרגע. אם מצב זה נמשך נא ליידע את מנהל הוויקי.';
-$lang['authpwdexpire']         = 'הסיסמה שלך תפוג ב% d ימים, אתה צריך לשנות את זה בקרוב.';
 $lang['i_chooselang']          = 'נא לבחור שפה';
 $lang['i_installer']           = 'תכנית ההתקנה של DokuWiki';
 $lang['i_wikiname']            = 'שם הוויקי';
@@ -283,9 +290,10 @@ $lang['i_superuser']           = 'משתמש־על';
 $lang['i_problems']            = 'תכנית ההתקנה זיהתה מספר בעיות המפורטות להלן. אין באפשרותך להמשיך לפני תיקונן.';
 $lang['i_modified']            = 'משיקולי אבטחה סקריפט זה יעבוד אך ורק עם התקנת DokuWiki חדשה שלא עברה כל שינוי.
                          עליך לחלץ שנית את הקבצים מהחבילה שהורדה או להיעזר בדף
-                         <a href="http://dokuwiki.org/install">Dokuwiki installation instructions</a>';
-$lang['i_funcna']              = 'פונקציית ה-PHP&rlm; <code>%s</code> אינה זמינה. יתכן כי מארח האתר חסם אותה מסיבה כלשהי?';
-$lang['i_phpver']              = 'גרסת PHP שלך <code>%s</code> נמוכה מ <code>%s</ code> הצורך. אתה צריך לשדרג PHP שלך להתקין.';
+                         <a href="https://www.dokuwiki.org/install">Dokuwiki installation instructions</a>';
+$lang['i_funcna']              = 'פונקציית ה-PHP&#8207; <code>%s</code> אינה זמינה. יתכן כי מארח האתר חסם אותה מסיבה כלשהי?';
+$lang['i_phpver']              = 'גרסת PHP שלך <code>%s</code> נמוכה מ <code>%s</code> הצורך. אתה צריך לשדרג PHP שלך להתקין.';
+$lang['i_mbfuncoverload']      = 'יש לבטל את mbstring.func_overload בphp.ini בכדי להריץ את DokuWiki';
 $lang['i_permfail']            = '<code>%s</code> אינה ניתנת לכתיבה על ידי DokuWiki. עליך לשנות הרשאות תיקייה זו!';
 $lang['i_confexists']          = '<code>%s</code> כבר קיים';
 $lang['i_writeerr']            = 'אין אפשרות ליצור את <code>%s</code>. נא לבדוק את הרשאות הקובץ/תיקייה וליצור את הקובץ ידנית.';
@@ -323,5 +331,23 @@ $lang['media_list_rows']       = 'שורות';
 $lang['media_sort_name']       = 'שם';
 $lang['media_sort_date']       = 'תאריך';
 $lang['media_namespaces']      = 'בחר מרחב שמות';
-$lang['media_files']           = 'קבצים ב s%';
-$lang['media_upload']          = 'להעלות s%';
+$lang['media_files']           = 'קבצים ב %s';
+$lang['media_upload']          = 'להעלות %s';
+$lang['media_search']          = 'חיפוש ב%s';
+$lang['media_view']            = '%s';
+$lang['media_viewold']         = '%s ב %s';
+$lang['media_edit']            = 'ערוך %s';
+$lang['media_history']         = 'היסטוריה של %s';
+$lang['media_meta_edited']     = 'metadata נערך';
+$lang['media_perm_read']       = 'מצטערים, אין לך הרשאות לקרוא קבצים.';
+$lang['media_perm_upload']     = 'מצטערים, אין לך הרשאות להעלות קבצים.';
+$lang['media_update']          = 'העלה גירסה חדשה';
+$lang['media_restore']         = 'שחזר גירסה זו';
+$lang['media_acl_warning']     = 'רשימה זו עלולה להיות חסרה עכב חוסר בהרשאות או דפים מוסתרים';
+$lang['currentns']             = 'שם מרחב נוכחי';
+$lang['searchresult']          = 'תוצאות חיפוש';
+$lang['plainhtml']             = 'HTML פשוט';
+$lang['page_nonexist_rev']     = 'העמוד לא קיים ב%s. העמוד נוצר במקום זאת ב<a href="%s">%s</a>.';
+$lang['unable_to_parse_date']  = 'לא ניתן לפענח פרמטר "%s".';
+$lang['email_signature_text']  = 'הודעת דוא״ל זו נוצרה על ידי ה־DokuWiki הזמין בכתובת
+@DOKUWIKIURL@';

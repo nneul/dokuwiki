@@ -2,7 +2,7 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Anika Henke <anika@selfthinker.org>
  * @author Matthias Grimm <matthiasgrimm@users.sourceforge.net>
@@ -11,11 +11,11 @@
  * @author Konstantinos Koryllos <koryllos@gmail.com>
  * @author George Petsagourakis <petsagouris@gmail.com>
  * @author Petros Vidalis <pvidalis@gmail.com>
- * @author Vasileios Karavasilis vasileioskaravasilis@gmail.com
+ * @author Vasileios Karavasilis <vasileioskaravasilis@gmail.com>
  */
 $lang['admin_acl']             = 'Διαχείριση Δικαιωμάτων Πρόσβασης';
-$lang['acl_group']             = 'Ομάδα';
-$lang['acl_user']              = 'Χρήστης';
+$lang['acl_group']             = 'Ομάδα:';
+$lang['acl_user']              = 'Χρήστης:';
 $lang['acl_perms']             = 'Δικαιώματα για';
 $lang['page']                  = 'Σελίδα';
 $lang['namespace']             = 'Φάκελος';

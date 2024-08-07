@@ -5,7 +5,7 @@ if(!defined('UTF8_NOMBSTRING')) define('UTF8_NOMBSTRING',1);
 /**
  * @group slow
  */
-class utf8_romanize_test extends PHPUnit_Framework_TestCase {
+class utf8_romanize_test extends DokuWikiTest {
 
     /**
      * Check Japanese romanization
@@ -18,7 +18,7 @@ class utf8_romanize_test extends PHPUnit_Framework_TestCase {
         foreach($tests as $test){
             list($jap,$rom) = explode(';',trim($test));
 
-            $chk = utf8_romanize($jap);
+            $chk = \dokuwiki\Utf8\Clean::romanize($jap);
             $this->assertEquals($rom,$chk,"$jap\t->\t$chk\t!=\t$rom\t($line)");
             $line++;
         }
@@ -31,7 +31,15 @@ class utf8_romanize_test extends PHPUnit_Framework_TestCase {
      * @author Andreas Gohr <andi@splitbrain.org>
      */
     function test_deaccented(){
-        $this->assertEquals("a A a A a o O",utf8_romanize("å Å ä Ä ä ö Ö"));
+        $this->assertEquals("a A a A a o O",\dokuwiki\Utf8\Clean::romanize("å Å ä Ä ä ö Ö"));
     }
+
+    /**
+     * Greeklish romanization
+     */
+    function test_greeklish(){
+        $this->assertEquals('kalimera pos eiste',\dokuwiki\Utf8\Clean::romanize('Καλημέρα πώς είστε'));
+    }
+
 }
-//Setup VIM: ex: et ts=4 :
+

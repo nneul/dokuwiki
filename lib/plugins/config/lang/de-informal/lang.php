@@ -1,7 +1,10 @@
 <?php
+
 /**
- * German (informal) language file
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Axel Kirch <axel@globeglotter.com>
+ * @author MaWi <drmaxxis@gmail.com>
  * @author Alexander Fischer <tbanus@os-forge.net>
  * @author Juergen Schwarzer <jschwarzer@freenet.de>
  * @author Marcel Metz <marcel_metz@gmx.de>
@@ -11,7 +14,7 @@
  * @author Frank Loizzi <contact@software.bacal.de>
  * @author Mateng Schimmerlos <mateng@firemail.de>
  * @author Volker Bödker <volker@boedker.de>
- * @author Matthias Schulte <dokuwiki@lupo49.de>
+ * @author rnck <dokuwiki@rnck.de>
  */
 $lang['menu']                  = 'Konfiguration';
 $lang['error']                 = 'Konfiguration wurde nicht aktualisiert auf Grund eines ungültigen Wertes. Bitte überprüfe deine Änderungen und versuche es erneut.<br />Die/der ungültige(n) Wert(e) werden durch eine rote Umrandung hervorgehoben.';
@@ -39,6 +42,7 @@ $lang['_advanced']             = 'Erweitert';
 $lang['_network']              = 'Netzwerk';
 $lang['_msg_setting_undefined'] = 'Keine Konfigurationsmetadaten.';
 $lang['_msg_setting_no_class'] = 'Keine Konfigurationsklasse.';
+$lang['_msg_setting_no_known_class'] = 'Setting-Klasse nicht verfügbar.';
 $lang['_msg_setting_no_default'] = 'Kein Standardwert.';
 $lang['title']                 = 'Wiki Titel';
 $lang['start']                 = 'Name der Startseite';
@@ -60,7 +64,7 @@ $lang['breadcrumbs']           = 'Anzahl der Einträge im "Krümelpfad"';
 $lang['youarehere']            = 'Hierarchische Pfadnavigation verwenden';
 $lang['fullpath']              = 'Zeige vollen Pfad der Datei in Fußzeile an';
 $lang['typography']            = 'Mach drucktechnische Ersetzungen';
-$lang['dformat']               = 'Datumsformat (siehe PHPs <a href="http://www.php.net/strftime">strftime</a> Funktion)';
+$lang['dformat']               = 'Datumsformat (siehe PHPs <a href="http://php.net/strftime">strftime</a> Funktion)';
 $lang['signature']             = 'Signatur';
 $lang['showuseras']            = 'Was angezeigt werden soll, wenn der Benutzer, der zuletzt eine Seite bearbeitet hat, angezeigt wird';
 $lang['toptoclevel']           = 'Inhaltsverzeichnis bei dieser Überschriftengröße beginnen';
@@ -72,7 +76,7 @@ $lang['deaccent']              = 'Seitennamen bereinigen';
 $lang['useheading']            = 'Erste Überschrift als Seitennamen verwenden';
 $lang['sneaky_index']          = 'Standardmäßig zeigt DokuWiki alle Namensräume in der Indexansicht an. Bei Aktivierung dieser Einstellung werden alle Namensräume versteckt, in welchen der Benutzer keine Leserechte hat. Dies könnte dazu führen, dass lesbare Unternamensräume versteckt werden. Dies kann die Indexansicht bei bestimmten Zugangskontrolleinstellungen unbenutzbar machen.';
 $lang['hidepages']             = 'Seiten verstecken (Regulärer Ausdruck)';
-$lang['useacl']                = 'Benutze Zugangskontrollliste';
+$lang['useacl']                = 'Benutze Zugriffskontrollliste';
 $lang['autopasswd']            = 'Automatisch erzeugte Passwörter';
 $lang['authtype']              = 'Authentifizierungsmethode';
 $lang['passcrypt']             = 'Passwortverschlüsselungsmethode';
@@ -87,18 +91,18 @@ $lang['disableactions_subscription'] = 'Bestellen/Abbestellen';
 $lang['disableactions_wikicode'] = 'Zeige Quelle/Exportiere Rohdaten';
 $lang['disableactions_profile_delete'] = 'Eigenes Benutzerprofil löschen';
 $lang['disableactions_other']  = 'Weitere Aktionen (durch Komma getrennt)';
+$lang['disableactions_rss']    = 'XML Syndication (RSS)';
 $lang['auth_security_timeout'] = 'Zeitüberschreitung bei der Authentifizierung (Sekunden)';
 $lang['securecookie']          = 'Sollen Cookies, die via HTTPS gesetzt wurden nur per HTTPS versendet werden? Deaktiviere diese Option, wenn nur der Login deines Wikis mit SSL gesichert ist, aber das Betrachten des Wikis ungesichert geschieht.';
 $lang['remote']                = 'Aktiviert den externen API-Zugang. Diese Option erlaubt es externen Anwendungen von außen auf die XML-RPC-Schnittstelle oder anderweitigen Schnittstellen zuzugreifen.';
 $lang['remoteuser']            = 'Zugriff auf die externen Schnittstellen durch kommaseparierte Angabe von Benutzern oder Gruppen einschränken. Ein leeres Feld erlaubt Zugriff für jeden.';
+$lang['remotecors']            = 'Erlaubt externen Clients API-Zugriff per Cross-Origin Resource Sharing (CORS). Asterisk (*), um alle Quellen zu erlauben. Leer lassen, um CORS zu deaktivieren.';
 $lang['usewordblock']          = 'Blockiere Spam basierend auf der Wortliste';
 $lang['relnofollow']           = 'rel="nofollow" verwenden';
 $lang['indexdelay']            = 'Zeit bevor Suchmaschinenindexierung erlaubt ist';
 $lang['mailguard']             = 'E-Mail-Adressen schützen';
 $lang['iexssprotect']          = 'Hochgeladene Dateien auf bösartigen JavaScript- und HTML-Code untersuchen';
 $lang['usedraft']              = 'Speichere automatisch Entwürfe während der Bearbeitung';
-$lang['htmlok']                = 'Erlaube eingebettetes HTML';
-$lang['phpok']                 = 'Erlaube eingebettetes PHP';
 $lang['locktime']              = 'Maximales Alter für Seitensperren (Sekunden)';
 $lang['cachetime']             = 'Maximale Cachespeicherung (Sekunden)';
 $lang['target____wiki']        = 'Zielfenstername für interne Links';
@@ -117,15 +121,21 @@ $lang['subscribe_time']        = 'Zeit nach der Zusammenfassungs- und Änderungs
 $lang['notify']                = 'Sende Änderungsbenachrichtigungen an diese E-Mail-Adresse.';
 $lang['registernotify']        = 'Sende Information bei neu registrierten Benutzern an diese E-Mail-Adresse.';
 $lang['mailfrom']              = 'Absenderadresse für automatisch erzeugte E-Mails';
+$lang['mailreturnpath']        = 'Empfänger-E-Mail-Adresse für Unzustellbarkeitsnachricht';
 $lang['mailprefix']            = 'Präfix für E-Mail-Betreff beim automatischen Versand von Benachrichtigungen';
 $lang['htmlmail']              = 'Versendet optisch angenehmere, aber größere E-Mails im HTML-Format (multipart). Deaktivieren, um Text-Mails zu versenden.';
+$lang['dontlog']               = 'Deaktivieren Sie die Protokollierung für diese Arten von Logs.';
 $lang['sitemap']               = 'Erzeuge Google Sitemaps (Tage)';
 $lang['rss_type']              = 'XML-Feed-Format';
 $lang['rss_linkto']            = 'XML-Feed verlinken auf';
 $lang['rss_content']           = 'Was soll in XML-Feedinhalten angezeigt werden?';
 $lang['rss_update']            = 'Aktualisierungsintervall für XML-Feeds (Sekunden)';
 $lang['rss_show_summary']      = 'Bearbeitungs-Zusammenfassung im XML-Feed anzeigen';
+$lang['rss_show_deleted']      = 'XML-Feed: Gelöschte Feeds anzeigen';
 $lang['rss_media']             = 'Welche Änderungen sollen im XML-Feed angezeigt werden?';
+$lang['rss_media_o_both']      = 'beide';
+$lang['rss_media_o_pages']     = 'Seiten';
+$lang['rss_media_o_media']     = 'Medien';
 $lang['updatecheck']           = 'Automatisch auf Updates und Sicherheitswarnungen prüfen? DokuWiki muss sich dafür mit update.dokuwiki.org verbinden.';
 $lang['userewrite']            = 'Benutze schöne URLs';
 $lang['useslash']              = 'Benutze Schrägstrich als Namensraumtrenner in URLs';
@@ -136,26 +146,33 @@ $lang['autoplural']            = 'Bei Links automatisch nach vorhandenen Pluralf
 $lang['compression']           = 'Komprimierungsmethode für alte Seitenrevisionen';
 $lang['gzip_output']           = 'Seiten mit gzip komprimiert ausliefern';
 $lang['compress']              = 'JavaScript und Stylesheets komprimieren';
-$lang['cssdatauri']            = 'Größe in Bytes, bis zu der Bilder in css-Dateien referenziert werden können, um HTTP-Anfragen zu minimieren. Diese Technik funktioniert nicht im IE 7 und älter! <code>400</code> bis <code>600</code> Bytes sind gute Werte. Setze <code>0</code> für inaktive Funktion.';
+$lang['cssdatauri']            = 'Größe in Bytes, bis zu der Bilder in css-Dateien referenziert werden können, um HTTP-Anfragen zu minimieren. <code>400</code> bis <code>600</code> Bytes sind gute Werte. Setze <code>0</code> für inaktive Funktion.';
 $lang['send404']               = 'Sende "HTTP 404/Seite nicht gefunden" für nicht existierende Seiten';
-$lang['broken_iua']            = 'Falls die Funktion ignore_user_abort auf deinem System nicht funktioniert, könnte der Such-Index nicht funktionieren. IIS+PHP/CGI ist bekannt dafür. Siehe auch <a href="http://bugs.splitbrain.org/?do=details&amp;task_id=852">Bug 852</a>.';
+$lang['broken_iua']            = 'Falls die Funktion ignore_user_abort auf deinem System nicht funktioniert, könnte der Such-Index nicht funktionieren. IIS+PHP/CGI ist bekannt dafür.';
 $lang['xsendfile']             = 'Den X-Sendfile-Header nutzen, um Dateien direkt vom Webserver ausliefern zu lassen? Dein Webserver muss dies unterstützen!';
 $lang['renderer_xhtml']        = 'Standard-Renderer für die normale (XHTML) Wiki-Ausgabe.';
 $lang['renderer__core']        = '%s (DokuWiki Kern)';
 $lang['renderer__plugin']      = '%s (Erweiterung)';
+$lang['search_nslimit']        = 'Beschränke die Suche auf die jetzigen X Namensräume. Wenn eine Suche von einer Seite in einem tieferen Namensraum aus ausgeführt wird, werden die ersten X Namensräume als Filter hinzugefügt';
+$lang['search_fragment']       = 'Spezifiziere das vorgegebenen Fragment-Suchverhalten';
+$lang['search_fragment_o_exact'] = 'genaue Treffer';
+$lang['search_fragment_o_starts_with'] = 'beginnt mit';
+$lang['search_fragment_o_ends_with'] = 'endet mit';
+$lang['search_fragment_o_contains'] = 'enthält';
+$lang['trustedproxy']          = 'Vertraue Weiterleitungs-Proxys, welche dem regulärem Ausdruck entsprechen, hinsichtlich der angegebenen Client-ID. Der Standardwert entspricht dem lokalem Netzwerk. Leer lassen um jedem Proxy zu vertrauen.';
+$lang['_feature_flags']        = 'Feature-Flags';
+$lang['defer_js']              = 'JavaScript-Ausführung verzögern bis das HTML der gesamten Seite verarbeitet wurde. Erhöht die gefühlte Geschwindigkeit des Seitenaufbaus, kann aber mit einigen wenigen Plugins inkompatibel sein.';
 $lang['dnslookups']            = 'DokuWiki löst die IP-Adressen von Benutzern zu deren Hostnamen auf. Wenn du einen langsamen, unbrauchbaren DNS-Server verwendest oder die Funktion nicht benötigst, dann sollte diese Option deaktivert sein.';
+$lang['jquerycdn']             = 'Sollen die jQuery und jQuery UI Skriptdateien von einem CDN geladen werden? Das verursacht zusätzliche HTTP Anfragen, aber die Dateien werden möglicherweise schneller geladen und Nutzer haben sie vielleicht bereits im Cache.';
+$lang['jquerycdn_o_0']         = 'Kein CDN, nur lokale Auslieferung';
+$lang['jquerycdn_o_jquery']    = 'CDN bei code.jquery.com';
+$lang['jquerycdn_o_cdnjs']     = 'CDN bei cdnjs.com';
 $lang['proxy____host']         = 'Proxyadresse';
 $lang['proxy____port']         = 'Proxyport';
 $lang['proxy____user']         = 'Benutzername für den Proxy';
-$lang['proxy____pass']         = 'Passwort von dem Proxybenutzer';
-$lang['proxy____ssl']          = 'SSL verwenden um auf den Proxy zu zugreifen';
+$lang['proxy____pass']         = 'Passwort des Proxybenutzers';
+$lang['proxy____ssl']          = 'SSL verwenden, um auf den Proxy zuzugreifen';
 $lang['proxy____except']       = 'Regulärer Ausdruck um Adressen zu beschreiben, für die kein Proxy verwendet werden soll';
-$lang['safemodehack']          = 'Aktiviere safemode Hack';
-$lang['ftp____host']           = 'FTP Server für safemode Hack';
-$lang['ftp____port']           = 'FTP Port für safemode Hack';
-$lang['ftp____user']           = 'FTP Benutzername für safemode Hack';
-$lang['ftp____pass']           = 'FTP Passwort für safemode Hack';
-$lang['ftp____root']           = 'FTP Wurzelverzeichnis für Safemodehack';
 $lang['license_o_']            = 'Nichts ausgewählt';
 $lang['typography_o_0']        = 'nichts';
 $lang['typography_o_1']        = 'ohne einfache Anführungszeichen';
@@ -191,6 +208,7 @@ $lang['xsendfile_o_2']         = 'Standard X-Sendfile-Header';
 $lang['xsendfile_o_3']         = 'Proprietärer Nginx X-Accel-Redirect-Header';
 $lang['showuseras_o_loginname'] = 'Login-Name';
 $lang['showuseras_o_username'] = 'Voller Name des Benutzers';
+$lang['showuseras_o_username_link'] = 'Kompletter Name des Benutzers als Interwiki-Link';
 $lang['showuseras_o_email']    = 'E-Mail-Adresse des Benutzers (je nach Mailguard-Einstellung verschleiert)';
 $lang['showuseras_o_email_link'] = 'E-Mail-Adresse des Benutzers als mailto:-Link';
 $lang['useheading_o_0']        = 'Niemals';

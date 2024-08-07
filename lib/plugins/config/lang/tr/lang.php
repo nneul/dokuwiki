@@ -1,12 +1,18 @@
 <?php
+
 /**
- * Turkish language file
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
+ * @author Ekin <ata.ekin@windowslive.com>
+ * @author Eren <bosshyapma@protonmail.com>
+ * @author Hakan <hakandursun2009@gmail.com>
+ * @author mahir <mahirtakak@gmail.com>
  * @author Aydın Coşkuner <aydinweb@gmail.com>
  * @author Cihan Kahveci <kahvecicihan@gmail.com>
  * @author Yavuz Selim <yavuzselim@gmail.com>
  * @author Caleb Maclennan <caleb@alerque.com>
- * @author farukerdemoncel@gmail.com
+ * @author farukerdemoncel <farukerdemoncel@gmail.com>
+ * @author Mete Cuma <mcumax@gmail.com>
  */
 $lang['menu']                  = 'Site Ayarları';
 $lang['error']                 = 'Ayarlar yanlış bir değer girildiği için güncellenemedi. Lütfen değişikliklerinizi gözden geçirin ve tekrar gönderin.
@@ -30,6 +36,7 @@ $lang['_anti_spam']            = 'Spam Engelleme Ayarları';
 $lang['_editing']              = 'Sayfa Yazımı Ayarları';
 $lang['_links']                = 'Bağlantı Ayarları';
 $lang['_media']                = 'Medya Ayarları';
+$lang['_notifications']        = 'Bildirim';
 $lang['_advanced']             = 'Gelişmiş Ayarlar';
 $lang['_network']              = 'Ağ Ayarları';
 $lang['_msg_setting_undefined'] = 'Ayar üstverisi yok.';
@@ -51,7 +58,7 @@ $lang['breadcrumbs']           = 'Ekmek kırıntıların sayısı';
 $lang['youarehere']            = 'hiyerarşik ekmek kırıntıları';
 $lang['fullpath']              = 'sayfaların tüm patikasını (full path) göster';
 $lang['typography']            = 'Tipografik değiştirmeleri yap';
-$lang['dformat']               = 'Tarih biçimi (PHP\'nin <a href="http://www.php.net/strftime">strftime</a> fonksiyonuna bakın)';
+$lang['dformat']               = 'Tarih biçimi (PHP\'nin <a href="http://php.net/strftime">strftime</a> fonksiyonuna bakın)';
 $lang['signature']             = 'İmza';
 $lang['showuseras']            = 'Bir sayfayı en son düzenleyen kullanıcıya ne gösterilsin';
 $lang['toptoclevel']           = 'İçindekiler için en üst seviye';
@@ -74,8 +81,6 @@ $lang['relnofollow']           = 'Dışsal linkler rel="nofollow" kullan';
 $lang['indexdelay']            = 'Indekslemeden evvel zaman gecikmesi (saniye)';
 $lang['mailguard']             = 'Email adreslerini karart';
 $lang['iexssprotect']          = 'Yüklenmiş dosyaları muhtemel kötu niyetli JavaScript veya HTML koduna kontrol et';
-$lang['htmlok']                = 'Gömülü HTML koduna izin ver';
-$lang['phpok']                 = 'Gömülü PHP koduna izin ver';
 $lang['refcheck']              = 'Araç kaynak denetimi';
 $lang['gdlib']                 = 'GD Lib sürümü';
 $lang['jpg_quality']           = 'JPG sıkıştırma kalitesi [0-100]';
@@ -91,10 +96,6 @@ $lang['proxy____host']         = 'Proxy sunucu adı';
 $lang['proxy____user']         = 'Proxy kullanıcı adı';
 $lang['proxy____pass']         = 'Proxy şifresi';
 $lang['proxy____ssl']          = 'Proxy ile bağlanırken ssl kullan';
-$lang['safemodehack']          = 'Safemod hackını etkili kıl';
-$lang['ftp____host']           = 'Safemod hackı için kullanılacak FTP suncusu';
-$lang['ftp____user']           = 'Safemod hackı için kullanılacak FTP kullanıcı adı';
-$lang['ftp____pass']           = 'Safemod hackı için kullanılacak FTP parolası';
 $lang['license_o_']            = 'Seçilmedi';
 $lang['typography_o_0']        = 'Yok';
 $lang['userewrite_o_0']        = 'hiçbiri';

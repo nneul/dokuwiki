@@ -1,5 +1,3 @@
 ====== Cerca ======
 
-Questi sono i risultati della ricerca. Se non hai trovato quello che cercavi, puoi creare una nuova pagina con questo titolo usando il pulsante ''Crea questa pagina''.
-
-===== Risultati =====
+Questi sono i risultati della ricerca. @CREATEPAGEINFO@

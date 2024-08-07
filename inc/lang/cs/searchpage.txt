@@ -1,5 +1,3 @@
 ====== Vyhledávání ======
 
-Výsledky hledání můžete vidět níže. Pokud jste nenašli, co hledáte, zkuste požadovanou stránku sami vytvořit stisknutím tlačítka ''Vytvořit stránku''.
-
-===== Výsledky =====
+Výsledky hledání můžete vidět níže. @CREATEPAGEINFO@

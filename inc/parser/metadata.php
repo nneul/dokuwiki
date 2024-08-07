@@ -1,136 +1,213 @@
 <?php
+
+use dokuwiki\File\MediaResolver;
+use dokuwiki\File\PageResolver;
+use dokuwiki\Utf8\PhpString;
+
 /**
- * Renderer for metadata
+ * The MetaData Renderer
+ *
+ * Metadata is additional information about a DokuWiki page that gets extracted mainly from the page's content
+ * but also it's own filesystem data (like the creation time). All metadata is stored in the fields $meta and
+ * $persistent.
+ *
+ * Some simplified rendering to $doc is done to gather the page's (text-only) abstract.
  *
  * @author Esther Brunner <wikidesign@gmail.com>
  */
-if(!defined('DOKU_INC')) die('meh.');
+class Doku_Renderer_metadata extends Doku_Renderer
+{
+    /** the approximate byte lenght to capture for the abstract */
+    public const ABSTRACT_LEN = 250;
 
-if ( !defined('DOKU_LF') ) {
-    // Some whitespace to help View > Source
-    define ('DOKU_LF',"\n");
-}
+    /** the maximum UTF8 character length for the abstract */
+    public const ABSTRACT_MAX = 500;
 
-if ( !defined('DOKU_TAB') ) {
-    // Some whitespace to help View > Source
-    define ('DOKU_TAB',"\t");
-}
+    /** @var array transient meta data, will be reset on each rendering */
+    public $meta = [];
 
-require_once DOKU_INC . 'inc/parser/renderer.php';
+    /** @var array persistent meta data, will be kept until explicitly deleted */
+    public $persistent = [];
 
-/**
- * The Renderer
- */
-class Doku_Renderer_metadata extends Doku_Renderer {
+    /** @var array the list of headers used to create unique link ids */
+    protected $headers = [];
 
-    var $doc  = '';
-    var $meta = array();
-    var $persistent = array();
+    /** @var string temporary $doc store */
+    protected $store = '';
 
-    var $headers = array();
-    var $capture = true;
-    var $store   = '';
-    var $firstimage = '';
+    /** @var string keeps the first image reference */
+    protected $firstimage = '';
 
-    function getFormat(){
+    /** @var bool whether or not data is being captured for the abstract, public to be accessible by plugins */
+    public $capturing = true;
+
+    /** @var bool determines if enough data for the abstract was collected, yet */
+    public $capture = true;
+
+    /** @var int number of bytes captured for abstract */
+    protected $captured = 0;
+
+    /**
+     * Returns the format produced by this renderer.
+     *
+     * @return string always 'metadata'
+     */
+    public function getFormat()
+    {
         return 'metadata';
     }
 
-    function document_start(){
+    /**
+     * Initialize the document
+     *
+     * Sets up some of the persistent info about the page if it doesn't exist, yet.
+     */
+    public function document_start()
+    {
         global $ID;
 
-        $this->headers = array();
+        $this->headers = [];
 
         // external pages are missing create date
-        if(!$this->persistent['date']['created']){
+        if (!isset($this->persistent['date']['created']) || !$this->persistent['date']['created']) {
             $this->persistent['date']['created'] = filectime(wikiFN($ID));
         }
-        if(!isset($this->persistent['user'])){
+        if (!isset($this->persistent['user'])) {
             $this->persistent['user'] = '';
         }
-        if(!isset($this->persistent['creator'])){
+        if (!isset($this->persistent['creator'])) {
             $this->persistent['creator'] = '';
         }
         // reset metadata to persistent values
         $this->meta = $this->persistent;
     }
 
-    function document_end(){
+    /**
+     * Finalize the document
+     *
+     * Stores collected data in the metadata
+     */
+    public function document_end()
+    {
         global $ID;
 
         // store internal info in metadata (notoc,nocache)
         $this->meta['internal'] = $this->info;
 
-        if (!isset($this->meta['description']['abstract'])){
+        if (!isset($this->meta['description']['abstract'])) {
             // cut off too long abstracts
             $this->doc = trim($this->doc);
-            if (strlen($this->doc) > 500)
-                $this->doc = utf8_substr($this->doc, 0, 500).'…';
+            if (strlen($this->doc) > self::ABSTRACT_MAX) {
+                $this->doc = PhpString::substr($this->doc, 0, self::ABSTRACT_MAX) . '…';
+            }
             $this->meta['description']['abstract'] = $this->doc;
         }
 
         $this->meta['relation']['firstimage'] = $this->firstimage;
 
-        if(!isset($this->meta['date']['modified'])){
+        if (!isset($this->meta['date']['modified'])) {
             $this->meta['date']['modified'] = filemtime(wikiFN($ID));
         }
 
+        $this->doc = '';
     }
 
-    function toc_additem($id, $text, $level) {
+    /**
+     * Render plain text data
+     *
+     * This function takes care of the amount captured data and will stop capturing when
+     * enough abstract data is available
+     *
+     * @param $text
+     */
+    public function cdata($text)
+    {
+        if (!$this->capture || !$this->capturing) {
+            return;
+        }
+
+        $this->doc .= $text;
+
+        $this->captured += strlen($text);
+        if ($this->captured > self::ABSTRACT_LEN) {
+            $this->capture = false;
+        }
+    }
+
+    /**
+     * Add an item to the TOC
+     *
+     * @param string $id the hash link
+     * @param string $text the text to display
+     * @param int $level the nesting level
+     */
+    public function toc_additem($id, $text, $level)
+    {
         global $conf;
 
         //only add items within configured levels
-        if($level >= $conf['toptoclevel'] && $level <= $conf['maxtoclevel']){
+        if ($level >= $conf['toptoclevel'] && $level <= $conf['maxtoclevel']) {
             // the TOC is one of our standard ul list arrays ;-)
-            $this->meta['description']['tableofcontents'][] = array(
-              'hid'   => $id,
-              'title' => $text,
-              'type'  => 'ul',
-              'level' => $level-$conf['toptoclevel']+1
-            );
+            $this->meta['description']['tableofcontents'][] = [
+                'hid' => $id,
+                'title' => $text,
+                'type' => 'ul',
+                'level' => $level - $conf['toptoclevel'] + 1
+            ];
         }
-
     }
 
-    function header($text, $level, $pos) {
-        if (!isset($this->meta['title'])) $this->meta['title'] = $text;
+    /**
+     * Render a heading
+     *
+     * @param string $text the text to display
+     * @param int $level header level
+     * @param int $pos byte position in the original source
+     */
+    public function header($text, $level, $pos)
+    {
+        if (!isset($this->meta['title'])) {
+            $this->meta['title'] = $text;
+        }
 
         // add the header to the TOC
-        $hid = $this->_headerToLink($text,'true');
+        $hid = $this->_headerToLink($text, true);
         $this->toc_additem($hid, $text, $level);
 
         // add to summary
-        if ($this->capture && ($level > 1)) $this->doc .= DOKU_LF.$text.DOKU_LF;
+        $this->cdata(DOKU_LF . $text . DOKU_LF);
     }
 
-    function section_open($level){}
-    function section_close(){}
-
-    function cdata($text){
-      if ($this->capture) $this->doc .= $text;
+    /**
+     * Open a paragraph
+     */
+    public function p_open()
+    {
+        $this->cdata(DOKU_LF);
     }
 
-    function p_open(){
-      if ($this->capture) $this->doc .= DOKU_LF;
+    /**
+     * Close a paragraph
+     */
+    public function p_close()
+    {
+        $this->cdata(DOKU_LF);
     }
 
-    function p_close(){
-        if ($this->capture){
-            if (strlen($this->doc) > 250) $this->capture = false;
-            else $this->doc .= DOKU_LF;
-        }
+    /**
+     * Create a line break
+     */
+    public function linebreak()
+    {
+        $this->cdata(DOKU_LF);
     }
 
-    function linebreak(){
-        if ($this->capture) $this->doc .= DOKU_LF;
-    }
-
-    function hr(){
-        if ($this->capture){
-            if (strlen($this->doc) > 250) $this->capture = false;
-            else $this->doc .= DOKU_LF.'----------'.DOKU_LF;
-        }
+    /**
+     * Create a horizontal line
+     */
+    public function hr()
+    {
+        $this->cdata(DOKU_LF . '----------' . DOKU_LF);
     }
 
     /**
@@ -142,154 +219,261 @@ class Doku_Renderer_metadata extends Doku_Renderer {
      *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function footnote_open() {
-        if ($this->capture){
-            // move current content to store and record footnote
+    public function footnote_open()
+    {
+        if ($this->capture) {
+            // move current content to store
+            // this is required to ensure safe behaviour of plugins accessed within footnotes
             $this->store = $this->doc;
-            $this->doc   = '';
+            $this->doc = '';
+
+            // disable capturing
+            $this->capturing = false;
         }
     }
 
     /**
      * Callback for footnote end syntax
      *
-     * All rendered content is moved to the $footnotes array and the old
-     * content is restored from $store again
+     * All content rendered whilst within footnote syntax mode is discarded,
+     * the previously rendered content is restored and capturing is re-enabled.
      *
      * @author Andreas Gohr
      */
-    function footnote_close() {
-        if ($this->capture){
-            // restore old content
+    public function footnote_close()
+    {
+        if ($this->capture) {
+            // re-enable capturing
+            $this->capturing = true;
+            // restore previously rendered content
             $this->doc = $this->store;
             $this->store = '';
         }
     }
 
-    function listu_open(){
-        if ($this->capture) $this->doc .= DOKU_LF;
+    /**
+     * Open an unordered list
+     */
+    public function listu_open()
+    {
+        $this->cdata(DOKU_LF);
     }
 
-    function listu_close(){
-        if ($this->capture && (strlen($this->doc) > 250)) $this->capture = false;
+    /**
+     * Open an ordered list
+     */
+    public function listo_open()
+    {
+        $this->cdata(DOKU_LF);
     }
 
-    function listo_open(){
-        if ($this->capture) $this->doc .= DOKU_LF;
+    /**
+     * Open a list item
+     *
+     * @param int $level the nesting level
+     * @param bool $node true when a node; false when a leaf
+     */
+    public function listitem_open($level, $node = false)
+    {
+        $this->cdata(str_repeat(DOKU_TAB, $level) . '* ');
     }
 
-    function listo_close(){
-        if ($this->capture && (strlen($this->doc) > 250)) $this->capture = false;
+    /**
+     * Close a list item
+     */
+    public function listitem_close()
+    {
+        $this->cdata(DOKU_LF);
     }
 
-    function listitem_open($level){
-        if ($this->capture) $this->doc .= str_repeat(DOKU_TAB, $level).'* ';
+    /**
+     * Output preformatted text
+     *
+     * @param string $text
+     */
+    public function preformatted($text)
+    {
+        $this->cdata($text);
     }
 
-    function listitem_close(){
-        if ($this->capture) $this->doc .= DOKU_LF;
+    /**
+     * Start a block quote
+     */
+    public function quote_open()
+    {
+        $this->cdata(DOKU_LF . DOKU_TAB . '"');
     }
 
-    function listcontent_open(){}
-    function listcontent_close(){}
-
-    function unformatted($text){
-        if ($this->capture) $this->doc .= $text;
+    /**
+     * Stop a block quote
+     */
+    public function quote_close()
+    {
+        $this->cdata('"' . DOKU_LF);
     }
 
-    function preformatted($text){
-        if ($this->capture) $this->doc .= $text;
+    /**
+     * Display text as file content, optionally syntax highlighted
+     *
+     * @param string $text text to show
+     * @param string $lang programming language to use for syntax highlighting
+     * @param string $file file path label
+     */
+    public function file($text, $lang = null, $file = null)
+    {
+        $this->cdata(DOKU_LF . $text . DOKU_LF);
     }
 
-    function file($text, $lang = null, $file = null){
-        if ($this->capture){
-            $this->doc .= DOKU_LF.$text;
-            if (strlen($this->doc) > 250) $this->capture = false;
-            else $this->doc .= DOKU_LF;
-        }
+    /**
+     * Display text as code content, optionally syntax highlighted
+     *
+     * @param string $text text to show
+     * @param string $language programming language to use for syntax highlighting
+     * @param string $file file path label
+     */
+    public function code($text, $language = null, $file = null)
+    {
+        $this->cdata(DOKU_LF . $text . DOKU_LF);
     }
 
-    function quote_open(){
-        if ($this->capture) $this->doc .= DOKU_LF.DOKU_TAB.'"';
+    /**
+     * Format an acronym
+     *
+     * Uses $this->acronyms
+     *
+     * @param string $acronym
+     */
+    public function acronym($acronym)
+    {
+        $this->cdata($acronym);
     }
 
-    function quote_close(){
-        if ($this->capture){
-            $this->doc .= '"';
-            if (strlen($this->doc) > 250) $this->capture = false;
-            else $this->doc .= DOKU_LF;
-        }
+    /**
+     * Format a smiley
+     *
+     * Uses $this->smiley
+     *
+     * @param string $smiley
+     */
+    public function smiley($smiley)
+    {
+        $this->cdata($smiley);
     }
 
-    function code($text, $language = null, $file = null){
-        if ($this->capture){
-            $this->doc .= DOKU_LF.$text;
-            if (strlen($this->doc) > 250) $this->capture = false;
-            else $this->doc .= DOKU_LF;
-      }
+    /**
+     * Format an entity
+     *
+     * Entities are basically small text replacements
+     *
+     * Uses $this->entities
+     *
+     * @param string $entity
+     */
+    public function entity($entity)
+    {
+        $this->cdata($entity);
     }
 
-    function acronym($acronym){
-        if ($this->capture) $this->doc .= $acronym;
+    /**
+     * Typographically format a multiply sign
+     *
+     * Example: ($x=640, $y=480) should result in "640×480"
+     *
+     * @param string|int $x first value
+     * @param string|int $y second value
+     */
+    public function multiplyentity($x, $y)
+    {
+        $this->cdata($x . '×' . $y);
     }
 
-    function smiley($smiley){
-        if ($this->capture) $this->doc .= $smiley;
-    }
-
-    function entity($entity){
-        if ($this->capture) $this->doc .= $entity;
-    }
-
-    function multiplyentity($x, $y){
-        if ($this->capture) $this->doc .= $x.'×'.$y;
-    }
-
-    function singlequoteopening(){
+    /**
+     * Render an opening single quote char (language specific)
+     */
+    public function singlequoteopening()
+    {
         global $lang;
-        if ($this->capture) $this->doc .= $lang['singlequoteopening'];
+        $this->cdata($lang['singlequoteopening']);
     }
 
-    function singlequoteclosing(){
+    /**
+     * Render a closing single quote char (language specific)
+     */
+    public function singlequoteclosing()
+    {
         global $lang;
-        if ($this->capture) $this->doc .= $lang['singlequoteclosing'];
+        $this->cdata($lang['singlequoteclosing']);
     }
 
-    function apostrophe() {
+    /**
+     * Render an apostrophe char (language specific)
+     */
+    public function apostrophe()
+    {
         global $lang;
-        if ($this->capture) $this->doc .= $lang['apostrophe'];
+        $this->cdata($lang['apostrophe']);
     }
 
-    function doublequoteopening(){
+    /**
+     * Render an opening double quote char (language specific)
+     */
+    public function doublequoteopening()
+    {
         global $lang;
-        if ($this->capture) $this->doc .= $lang['doublequoteopening'];
+        $this->cdata($lang['doublequoteopening']);
     }
 
-    function doublequoteclosing(){
+    /**
+     * Render an closinging double quote char (language specific)
+     */
+    public function doublequoteclosing()
+    {
         global $lang;
-        if ($this->capture) $this->doc .= $lang['doublequoteclosing'];
+        $this->cdata($lang['doublequoteclosing']);
     }
 
-    function camelcaselink($link) {
+    /**
+     * Render a CamelCase link
+     *
+     * @param string $link The link name
+     * @see http://en.wikipedia.org/wiki/CamelCase
+     */
+    public function camelcaselink($link)
+    {
         $this->internallink($link, $link);
     }
 
-    function locallink($hash, $name = null){
-        if(is_array($name)) {
+    /**
+     * Render a page local link
+     *
+     * @param string $hash hash link identifier
+     * @param string $name name for the link
+     */
+    public function locallink($hash, $name = null)
+    {
+        if (is_array($name)) {
             $this->_firstimage($name['src']);
-            if ($name['type'] == 'internalmedia') $this->_recordMediaUsage($name['src']);
+            if ($name['type'] == 'internalmedia') {
+                $this->_recordMediaUsage($name['src']);
+            }
         }
     }
 
     /**
      * keep track of internal links in $this->meta['relation']['references']
+     *
+     * @param string $id page ID to link to. eg. 'wiki:syntax'
+     * @param string|array|null $name name for the link, array for media file
      */
-    function internallink($id, $name = null){
+    public function internallink($id, $name = null)
+    {
         global $ID;
 
-        if(is_array($name)) {
+        if (is_array($name)) {
             $this->_firstimage($name['src']);
-            if ($name['type'] == 'internalmedia') $this->_recordMediaUsage($name['src']);
+            if ($name['type'] == 'internalmedia') {
+                $this->_recordMediaUsage($name['src']);
+            }
         }
 
         $parts = explode('?', $id, 2);
@@ -300,147 +484,241 @@ class Doku_Renderer_metadata extends Doku_Renderer {
         $default = $this->_simpleTitle($id);
 
         // first resolve and clean up the $id
-        resolve_pageid(getNS($ID), $id, $exists);
-        list($page, $hash) = explode('#', $id, 2);
+        $resolver = new PageResolver($ID);
+        $id = $resolver->resolveId($id);
+        [$page] = sexplode('#', $id, 2);
 
         // set metadata
-        $this->meta['relation']['references'][$page] = $exists;
+        $this->meta['relation']['references'][$page] = page_exists($page);
         // $data = array('relation' => array('isreferencedby' => array($ID => true)));
         // p_set_metadata($id, $data);
 
         // add link title to summary
-        if ($this->capture){
+        if ($this->capture) {
             $name = $this->_getLinkTitle($name, $default, $id);
             $this->doc .= $name;
         }
     }
 
-    function externallink($url, $name = null){
-        if(is_array($name)) {
+    /**
+     * Render an external link
+     *
+     * @param string $url full URL with scheme
+     * @param string|array|null $name name for the link, array for media file
+     */
+    public function externallink($url, $name = null)
+    {
+        if (is_array($name)) {
             $this->_firstimage($name['src']);
-            if ($name['type'] == 'internalmedia') $this->_recordMediaUsage($name['src']);
+            if ($name['type'] == 'internalmedia') {
+                $this->_recordMediaUsage($name['src']);
+            }
         }
 
-        if ($this->capture){
+        if ($this->capture) {
             $this->doc .= $this->_getLinkTitle($name, '<' . $url . '>');
         }
     }
 
-    function interwikilink($match, $name = null, $wikiName, $wikiUri){
-        if(is_array($name)) {
+    /**
+     * Render an interwiki link
+     *
+     * You may want to use $this->_resolveInterWiki() here
+     *
+     * @param string $match original link - probably not much use
+     * @param string|array $name name for the link, array for media file
+     * @param string $wikiName indentifier (shortcut) for the remote wiki
+     * @param string $wikiUri the fragment parsed from the original link
+     */
+    public function interwikilink($match, $name, $wikiName, $wikiUri)
+    {
+        if (is_array($name)) {
             $this->_firstimage($name['src']);
-            if ($name['type'] == 'internalmedia') $this->_recordMediaUsage($name['src']);
+            if ($name['type'] == 'internalmedia') {
+                $this->_recordMediaUsage($name['src']);
+            }
         }
 
-        if ($this->capture){
-            list($wikiUri, $hash) = explode('#', $wikiUri, 2);
+        if ($this->capture) {
+            [$wikiUri] = explode('#', $wikiUri, 2);
             $name = $this->_getLinkTitle($name, $wikiUri);
             $this->doc .= $name;
         }
     }
 
-    function windowssharelink($url, $name = null){
-        if(is_array($name)) {
+    /**
+     * Link to windows share
+     *
+     * @param string $url the link
+     * @param string|array $name name for the link, array for media file
+     */
+    public function windowssharelink($url, $name = null)
+    {
+        if (is_array($name)) {
             $this->_firstimage($name['src']);
-            if ($name['type'] == 'internalmedia') $this->_recordMediaUsage($name['src']);
+            if ($name['type'] == 'internalmedia') {
+                $this->_recordMediaUsage($name['src']);
+            }
         }
 
-        if ($this->capture){
-            if ($name) $this->doc .= $name;
-            else $this->doc .= '<'.$url.'>';
+        if ($this->capture) {
+            if ($name) {
+                $this->doc .= $name;
+            } else {
+                $this->doc .= '<' . $url . '>';
+            }
         }
     }
 
-    function emaillink($address, $name = null){
-        if(is_array($name)) {
+    /**
+     * Render a linked E-Mail Address
+     *
+     * Should honor $conf['mailguard'] setting
+     *
+     * @param string $address Email-Address
+     * @param string|array $name name for the link, array for media file
+     */
+    public function emaillink($address, $name = null)
+    {
+        if (is_array($name)) {
             $this->_firstimage($name['src']);
-            if ($name['type'] == 'internalmedia') $this->_recordMediaUsage($name['src']);
+            if ($name['type'] == 'internalmedia') {
+                $this->_recordMediaUsage($name['src']);
+            }
         }
 
-        if ($this->capture){
-            if ($name) $this->doc .= $name;
-            else $this->doc .= '<'.$address.'>';
+        if ($this->capture) {
+            if ($name) {
+                $this->doc .= $name;
+            } else {
+                $this->doc .= '<' . $address . '>';
+            }
         }
     }
 
-    function internalmedia($src, $title=null, $align=null, $width=null,
-                           $height=null, $cache=null, $linking=null){
-        if ($this->capture && $title) $this->doc .= '['.$title.']';
+    /**
+     * Render an internal media file
+     *
+     * @param string $src media ID
+     * @param string $title descriptive text
+     * @param string $align left|center|right
+     * @param int $width width of media in pixel
+     * @param int $height height of media in pixel
+     * @param string $cache cache|recache|nocache
+     * @param string $linking linkonly|detail|nolink
+     */
+    public function internalmedia(
+        $src,
+        $title = null,
+        $align = null,
+        $width = null,
+        $height = null,
+        $cache = null,
+        $linking = null
+    ) {
+        if ($this->capture && $title) {
+            $this->doc .= '[' . $title . ']';
+        }
         $this->_firstimage($src);
         $this->_recordMediaUsage($src);
     }
 
-    function externalmedia($src, $title=null, $align=null, $width=null,
-                           $height=null, $cache=null, $linking=null){
-        if ($this->capture && $title) $this->doc .= '['.$title.']';
+    /**
+     * Render an external media file
+     *
+     * @param string $src full media URL
+     * @param string $title descriptive text
+     * @param string $align left|center|right
+     * @param int $width width of media in pixel
+     * @param int $height height of media in pixel
+     * @param string $cache cache|recache|nocache
+     * @param string $linking linkonly|detail|nolink
+     */
+    public function externalmedia(
+        $src,
+        $title = null,
+        $align = null,
+        $width = null,
+        $height = null,
+        $cache = null,
+        $linking = null
+    ) {
+        if ($this->capture && $title) {
+            $this->doc .= '[' . $title . ']';
+        }
         $this->_firstimage($src);
     }
 
-    function rss($url,$params) {
+    /**
+     * Render the output of an RSS feed
+     *
+     * @param string $url URL of the feed
+     * @param array $params Finetuning of the output
+     */
+    public function rss($url, $params)
+    {
         $this->meta['relation']['haspart'][$url] = true;
 
         $this->meta['date']['valid']['age'] =
-              isset($this->meta['date']['valid']['age']) ?
-                  min($this->meta['date']['valid']['age'],$params['refresh']) :
-                  $params['refresh'];
+            isset($this->meta['date']['valid']['age']) ?
+                min($this->meta['date']['valid']['age'], $params['refresh']) :
+                $params['refresh'];
     }
 
-    //----------------------------------------------------------
-    // Utils
+    #region Utils
 
     /**
      * Removes any Namespace from the given name but keeps
      * casing and special chars
      *
+     * @param string $name
+     *
+     * @return mixed|string
      * @author Andreas Gohr <andi@splitbrain.org>
+     *
      */
-    function _simpleTitle($name){
+    public function _simpleTitle($name)
+    {
         global $conf;
 
-        if(is_array($name)) return '';
+        if (is_array($name)) {
+            return '';
+        }
 
-        if($conf['useslash']){
+        if ($conf['useslash']) {
             $nssep = '[:;/]';
-        }else{
+        } else {
             $nssep = '[:;]';
         }
-        $name = preg_replace('!.*'.$nssep.'!','',$name);
+        $name = preg_replace('!.*' . $nssep . '!', '', $name);
         //if there is a hash we use the anchor name only
-        $name = preg_replace('!.*#!','',$name);
+        $name = preg_replace('!.*#!', '', $name);
         return $name;
-    }
-
-    /**
-     * Creates a linkid from a headline
-     *
-     * @param string  $title   The headline title
-     * @param boolean $create  Create a new unique ID?
-     * @author Andreas Gohr <andi@splitbrain.org>
-     */
-    function _headerToLink($title, $create=false) {
-        if($create){
-            return sectionID($title,$this->headers);
-        }else{
-            $check = false;
-            return sectionID($title,$check);
-        }
     }
 
     /**
      * Construct a title and handle images in titles
      *
+     * @param string|array|null $title either string title or media array
+     * @param string $default default title if nothing else is found
+     * @param null|string $id linked page id (used to extract title from first heading)
+     * @return string title text
      * @author Harry Fuecks <hfuecks@gmail.com>
      */
-    function _getLinkTitle($title, $default, $id=null) {
-        global $conf;
-
-        $isImage = false;
-        if (is_array($title)){
-            if($title['title']) return '['.$title['title'].']';
-        } else if (is_null($title) || trim($title)==''){
-            if (useHeading('content') && $id){
-                $heading = p_get_first_heading($id,METADATA_DONT_RENDER);
-                if ($heading) return $heading;
+    public function _getLinkTitle($title, $default, $id = null)
+    {
+        if (is_array($title)) {
+            if ($title['title']) {
+                return '[' . $title['title'] . ']';
+            } else {
+                return $default;
+            }
+        } elseif (is_null($title) || trim($title) == '') {
+            if (useHeading('content') && $id) {
+                $heading = p_get_first_heading($id, METADATA_DONT_RENDER);
+                if ($heading) {
+                    return $heading;
+                }
             }
             return $default;
         } else {
@@ -448,27 +726,47 @@ class Doku_Renderer_metadata extends Doku_Renderer {
         }
     }
 
-    function _firstimage($src){
-        if($this->firstimage) return;
+    /**
+     * Remember first image
+     *
+     * @param string $src image URL or ID
+     */
+    protected function _firstimage($src)
+    {
         global $ID;
 
-        list($src,$hash) = explode('#',$src,2);
-        if(!media_isexternal($src)){
-            resolve_mediaid(getNS($ID),$src, $exists);
+        if ($this->firstimage) {
+            return;
         }
-        if(preg_match('/.(jpe?g|gif|png)$/i',$src)){
+
+        [$src] = explode('#', $src, 2);
+        if (!media_isexternal($src)) {
+            $src = (new MediaResolver($ID))->resolveId($src);
+        }
+        if (preg_match('/.(jpe?g|gif|png|webp|svg)$/i', $src)) {
             $this->firstimage = $src;
         }
     }
 
-    function _recordMediaUsage($src) {
+    /**
+     * Store list of used media files in metadata
+     *
+     * @param string $src media ID
+     */
+    protected function _recordMediaUsage($src)
+    {
         global $ID;
 
-        list ($src, $hash) = explode('#', $src, 2);
-        if (media_isexternal($src)) return;
-        resolve_mediaid(getNS($ID), $src, $exists);
-        $this->meta['relation']['media'][$src] = $exists;
+        [$src] = explode('#', $src, 2);
+        if (media_isexternal($src)) {
+            return;
+        }
+        $src = (new MediaResolver($ID))->resolveId($src);
+        $file = mediaFN($src);
+        $this->meta['relation']['media'][$src] = file_exists($file);
     }
+
+    #endregion
 }
 
 //Setup VIM: ex: et ts=4 :

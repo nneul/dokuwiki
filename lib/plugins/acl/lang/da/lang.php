@@ -2,7 +2,8 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
+ * @author Jacob Palm <mail@jacobpalm.dk>
  * @author koeppe <koeppe@kazur.dk>
  * @author Jon Bendtsen <bendtsen@diku.dk>
  * @author Lars Næsbye Christensen <larsnaesbye@stud.ku.dk>
@@ -11,13 +12,12 @@
  * @author Harith <haj@berlingske.dk>
  * @author Daniel Ejsing-Duun <dokuwiki@zilvador.dk>
  * @author Erik Bjørn Pedersen <erik.pedersen@shaw.ca>
- * @author rasmus@kinnerup.com
- * @author Michael Pedersen subben@gmail.com
+ * @author rasmus <rasmus@kinnerup.com>
  * @author Mikael Lyngvig <mikael@lyngvig.org>
  */
 $lang['admin_acl']             = 'Rettighedsadministration';
-$lang['acl_group']             = 'Gruppe';
-$lang['acl_user']              = 'Bruger';
+$lang['acl_group']             = 'Gruppe:';
+$lang['acl_user']              = 'Bruger:';
 $lang['acl_perms']             = 'Rettigheder for';
 $lang['page']                  = 'Dokument';
 $lang['namespace']             = 'Navnerum';
@@ -39,7 +39,7 @@ $lang['acl_perm0']             = 'Ingen';
 $lang['acl_perm1']             = 'Læs';
 $lang['acl_perm2']             = 'Skriv';
 $lang['acl_perm4']             = 'Opret';
-$lang['acl_perm8']             = 'Overføre';
+$lang['acl_perm8']             = 'Overfør';
 $lang['acl_perm16']            = 'Slet';
 $lang['acl_new']               = 'Tilføj ny post';
-$lang['acl_mod']               = 'Ændre post';
+$lang['acl_mod']               = 'Redigér post';

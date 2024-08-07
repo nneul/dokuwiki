@@ -1,93 +1,60 @@
-====== DokuWiki Test Suite ======
+====== DokuWiki Test Suite and Develpoment Tools ======
 
-This is the test suite to automatically test various parts of DokuWiki.
+This directory contains the test suite for DokuWiki as well as configuration for various code quality tools.
 
-===== Requirements =====
+===== Setup =====
 
-  * PHPUnit 3.6.10+ http://www.phpunit.de/
-  * PHP 5.3+ http://www.php.net
+Before you can use any of the tools you need to install the dependencies. This is done using composer.
 
-===== PHPUnit Installation ======
+  composer install
 
-==== via PEAR installer ====
+If you don't have composer installed yet, you can get it from https://getcomposer.org/
 
-  pear config-set auto_discover 1
-  pear install pear.phpunit.de/PHPUnit
+===== Composer Scripts =====
 
-==== via Composer ====
+The composer configuration contains a number of scripts to run the various tools on all of DokuWiki.
 
-Include a composer.json file in your project, which can be as minimal as:
+Run all the tests:
 
-<code>
-{
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*"
-    }
-}
-</code>
+  composer run test
 
-==== via PHP archive (PHAR) ====
+Check for code style violations:
 
-Download http://pear.phpunit.de/get/phpunit.phar and make it executable on your system.
+  composer run check
 
+Automatically fix code style violations:
 
-===== Running all tests =====
+  composer run autofix
 
-Just change to the ''_test'' directory and run phpunit:
+===== Tools =====
 
-  cd _test/
-  phpunit
+All the tools can be called directly from the ''vendor/bin'' directory.
 
-PHPUnit will fail on some systems with a //headers already sent// error.
-This is a known problem with PHPUnit, the error can be avoided by passing the
-'--stderr' flag to phpunit:
+==== PHPUnit ====
 
-  phpunit --stderr
+  ./vendor/bin/phpunit --verbose --stderr
 
-On windows you may have to enable OpenSSL support for https tests.
-Some of them point to httpclient_http.tests.php on the failure.
-To enable HTTPS support copy the ''libeay32.dll'' and ''ssleay32.dll'' to your ''windows\system32'' folder
-and add the following line to your php.ini in the extension section:
-<code ini>
-extension=php_openssl.dll
-</code>
+The --stderr flag is needed to avoid a headers already sent error on some systems.
 
-===== Running selected Tests =====
+To learn more about running tests and writing your own, visit https://www.dokuwiki.org/devel:unittesting
 
-You can run a single test file by providing it as an argument to phpunit:
+==== PHP CodeSniffer ====
 
-  phpunit --stderr tests/inc/common_cleanText.test.php
+To check for code violations:
 
-You can also use groups to exclude certain test from running. For example use
-the following command to avoid long running test or tests accessing the
-Internet.
+  ./vendor/bin/phpcs
 
-  phpunit --stderr --exclude-group slow,internet
+To automatically fix code violations:
 
-===== Create new Tests =====
+  ./vendor/bin/phpcbf
 
-To create a test for DokuWiki, create a *.test.php file within the tests/
-folder. Please respect the folder structure and naming convention. Inside the
-file, implement a class, extending 'DokuWikiTest'. Every method, starting
-with 'test' will be called as a test (e.g. 'testIfThisIsValid');
+To learn more about PHP CodeSniffer visit https://www.dokuwiki.org/devel:phpcodesniffer
 
+==== Rector ====
 
-===== TODO for the test framework =====
+To automatically fix code smells
 
-  * test cross platform compatibility: especially test windows
-  * update http://www.dokuwiki.org/devel:unittesting
-  * optional: add helper methods to TestRequest for easy form submission
-    * createForm(), ...
-  * check PHP Unit test_helpers https://github.com/sebastianbergmann/php-test-helpers
+  ./vendor/bin/rector process
 
-
-===== Migration Protocol =====
-
-The following tests were not migrated:
-
-  * inc/indexer_idx_indexlengths (fs dependencies)
-  * inc/mail_send (integration test)
-  * inc/parser/parser_formatting
-  * inc/parser/xhtml_htmlphp (runkit)
-  * inc/parser/xhtml_links
+To learn more about PHP CodeSniffer visit https://www.dokuwiki.org/devel:rector
 

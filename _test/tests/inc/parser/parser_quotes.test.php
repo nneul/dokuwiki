@@ -1,17 +1,21 @@
 <?php
+
+use dokuwiki\Parsing\ParserMode\Quotes;
+
 require_once 'parser.inc.php';
 
 class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
 
-    function setUp() {
+    function setUp() : void {
         parent::setUp();
         global $conf;
         $conf['typography'] = 2;
     }
 
     function testSingleQuoteOpening() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse("Foo 'hello Bar");
+        $raw = "Foo 'hello Bar";
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -23,12 +27,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testSingleQuoteOpeningSpecial() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse("Foo said:'hello Bar");
+        $raw = "Foo said:'hello Bar";
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -40,12 +45,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testSingleQuoteClosing() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse("Foo hello' Bar");
+        $raw = "Foo hello' Bar";
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -57,12 +63,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testSingleQuoteClosingSpecial() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse("Foo hello') Bar");
+        $raw = "Foo hello') Bar";
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -74,12 +81,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testSingleQuotes() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse("Foo 'hello' Bar");
+        $raw = "Foo 'hello' Bar";
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -93,12 +101,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testApostrophe() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse("hey it's fine weather today");
+        $raw = "hey it's fine weather today";
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -110,13 +119,14 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
 
     function testSingleQuotesSpecial() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse("Foo ('hello') Bar");
+        $raw = "Foo ('hello') Bar";
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -130,12 +140,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testDoubleQuoteOpening() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse('Foo "hello Bar');
+        $raw = 'Foo "hello Bar';
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -147,12 +158,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testDoubleQuoteOpeningSpecial() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse('Foo said:"hello Bar');
+        $raw = 'Foo said:"hello Bar';
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -164,12 +176,19 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testDoubleQuoteClosing() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse('Foo hello" Bar');
+        $raw = 'Foo hello" Bar';
+        $this->P->addMode('quotes',new Quotes());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $status = $this->getInaccessibleProperty($this->H, 'status');
+        $status['doublequote'] = 1;
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->setInaccessibleProperty($this->H, 'status', $status);
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -181,12 +200,19 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testDoubleQuoteClosingSpecial() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse('Foo hello") Bar');
+        $raw = 'Foo hello") Bar';
+        $this->P->addMode('quotes',new Quotes());
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $status = $this->getInaccessibleProperty($this->H, 'status');
+        $status['doublequote'] = 1;
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->setInaccessibleProperty($this->H, 'status', $status);
+
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -198,12 +224,36 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
+    }
+    function testDoubleQuoteClosingSpecial2() {
+        $raw = 'Foo hello") Bar';
+        $this->P->addMode('quotes',new Quotes());
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $status = $this->getInaccessibleProperty($this->H, 'status');
+        $status['doublequote'] = 0;
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->setInaccessibleProperty($this->H, 'status', $status);
+
+        $this->P->parse($raw);
+
+        $calls = array (
+            array('document_start',array()),
+            array('p_open',array()),
+            array('cdata',array("\n".'Foo hello')),
+            array('doublequoteopening',array()),
+            array('cdata',array(') Bar')),
+            array('p_close',array()),
+            array('document_end',array()),
+        );
+
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testDoubleQuotes() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse('Foo "hello" Bar');
+        $raw = 'Foo "hello" Bar';
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -217,12 +267,13 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
     function testDoubleQuotesSpecial() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse('Foo ("hello") Bar');
+        $raw = 'Foo ("hello") Bar';
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -236,12 +287,54 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls, 'wikitext => '.$raw);
     }
 
+    function testDoubleQuotesEnclosingBrackets() {
+        $raw = 'Foo "{hello}" Bar';
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
+
+        $calls = array (
+            array('document_start',array()),
+            array('p_open',array()),
+            array('cdata',array("\n".'Foo ')),
+            array('doublequoteopening',array()),
+            array('cdata',array('{hello}')),
+            array('doublequoteclosing',array()),
+            array('cdata',array(' Bar')),
+            array('p_close',array()),
+            array('document_end',array()),
+        );
+
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls,'wikitext - '.$raw);
+    }
+
+    function testDoubleQuotesEnclosingLink() {
+        $raw = 'Foo "[[www.domain.com]]" Bar';
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
+
+        $calls = array (
+            array('document_start',array()),
+            array('p_open',array()),
+            array('cdata',array("\n".'Foo ')),
+            array('doublequoteopening',array()),
+            array('cdata',array('[[www.domain.com]]')),
+            array('doublequoteclosing',array()),
+            array('cdata',array(' Bar')),
+            array('p_close',array()),
+            array('document_end',array()),
+        );
+
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls,'wikitext => '.$raw);
+    }
+
+
     function testAllQuotes() {
-        $this->P->addMode('quotes',new Doku_Parser_Mode_Quotes());
-        $this->P->parse('There was written "He thought \'It\'s a man\'s world\'".');
+        $raw = 'There was written "He thought \'It\'s a man\'s world\'".';
+        $this->P->addMode('quotes',new Quotes());
+        $this->P->parse($raw);
 
         $calls = array (
             array('document_start',array()),
@@ -262,8 +355,7 @@ class TestOfDoku_Parser_Quotes extends TestOfDoku_Parser {
             array('document_end',array()),
         );
 
-        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls);
+        $this->assertEquals(array_map('stripbyteindex',$this->H->calls),$calls,'wikitext => '.$raw);
     }
 
 }
-

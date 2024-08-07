@@ -2,12 +2,12 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
  * @author Grzegorz Żur <grzegorz.zur@gmail.com>
  * @author Mariusz Kujawski <marinespl@gmail.com>
  * @author Maciej Kurczewski <pipijajko@gmail.com>
  * @author Sławomir Boczek <slawkens@gmail.com>
- * @author sleshek@wp.pl
+ * @author sleshek <sleshek@wp.pl>
  * @author Leszek Stachowski <shazarre@gmail.com>
  * @author maros <dobrimaros@yahoo.pl>
  * @author Grzegorz Widła <dzesdzes@gmail.com>
@@ -16,8 +16,8 @@
  * @author Aoi Karasu <aoikarasu@gmail.com>
  */
 $lang['admin_acl']             = 'Zarządzanie uprawnieniami';
-$lang['acl_group']             = 'Grupa';
-$lang['acl_user']              = 'Użytkownik';
+$lang['acl_group']             = 'Grupa:';
+$lang['acl_user']              = 'Użytkownik:';
 $lang['acl_perms']             = 'Uprawnienia użytkownika';
 $lang['page']                  = 'Strona';
 $lang['namespace']             = 'Katalog';

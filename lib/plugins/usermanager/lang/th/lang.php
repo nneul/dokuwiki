@@ -1,9 +1,9 @@
 <?php
+
 /**
- * Thai language file
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  *
  * @author Komgrit Niyomrath <n.komgrit@gmail.com>
- * @author Kittithat Arnontavilas mrtomyum@gmail.com
  * @author Kittithat Arnontavilas <mrtomyum@gmail.com>
  * @author Thanasak Sompaisansin <jombthep@gmail.com>
  */

@@ -2,17 +2,14 @@
 
 /**
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * 
+ *
  * @author Oleksiy Voronin <ovoronin@gmail.com>
- * @author serg_stetsuk@ukr.net
- * @author okunia@gmail.com
+ * @author serg_stetsuk <serg_stetsuk@ukr.net>
  * @author Oleksandr Kunytsia <okunia@gmail.com>
- * @author Uko uko@uar.net
- * @author Ulrikhe Lukoie  <lukoie@gmail>.com
  */
 $lang['admin_acl']             = 'Керування списками контролю доступу';
-$lang['acl_group']             = 'Група';
-$lang['acl_user']              = 'Користувач';
+$lang['acl_group']             = 'Група:';
+$lang['acl_user']              = 'Користувач:';
 $lang['acl_perms']             = 'Права доступу для';
 $lang['page']                  = 'Сторінка';
 $lang['namespace']             = 'Простір імен';

@@ -1,148 +1,116 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
+
+use splitbrain\phpcli\CLI;
+use splitbrain\phpcli\Options;
+
+if (!defined('DOKU_INC')) define('DOKU_INC', realpath(__DIR__ . '/../') . '/');
+define('NOSESSION', 1);
+require_once(DOKU_INC . 'inc/init.php');
+
 /**
- * Strip unwanted languages from the DokuWiki install
- *
- * @author Martin 'E.T.' Misuth <et.github@ethome.sk>
+ * Remove unwanted languages from a DokuWiki install
  */
-if ('cli' != php_sapi_name()) die();
+class StripLangsCLI extends CLI
+{
+    /**
+     * Register options and arguments on the given $options object
+     *
+     * @param Options $options
+     * @return void
+     */
+    protected function setup(Options $options)
+    {
 
-#------------------------------------------------------------------------------
-if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../').'/');
-require_once DOKU_INC.'inc/cliopts.php';
+        $options->setHelp(
+            'Remove all languages from the installation, besides the ones specified. English language ' .
+            'is never removed!'
+        );
 
-#------------------------------------------------------------------------------
-function usage($show_examples = false) {
-    print "Usage: striplangs.php [-h [-x]] [-e] [-k lang1[,lang2]..[,langN]]
-
-    Removes all languages from the installation, besides the ones
-    after the -k option. English language is never removed!
-
-    OPTIONS
-        -h, --help     get this help
-        -x, --examples get also usage examples
-        -k, --keep     comma separated list of languages, -e is always implied
-        -e, --english  keeps english, dummy to use without -k\n";
-    if ( $show_examples ) {
-        print "\n
-    EXAMPLES
-        Strips all languages, but keeps 'en' and 'de':
-         striplangs -k de
-
-        Strips all but 'en','ca-valencia','cs','de','is','sk':
-         striplangs --keep ca-valencia,cs,de,is,sk
-
-        Strips all but 'en':
-         striplangs -e
-
-        No option specified, prints usage and throws error:
-         striplangs\n";
+        $options->registerOption(
+            'keep',
+            'Comma separated list of languages to keep in addition to English.',
+            'k',
+            'langcodes'
+        );
+        $options->registerOption(
+            'english-only',
+            'Remove all languages except English',
+            'e'
+        );
     }
-}
 
-function getSuppliedArgument($OPTS, $short, $long) {
-    $arg = $OPTS->get($short);
-    if ( is_null($arg) ) {
-        $arg = $OPTS->get($long);
+    /**
+     * Your main program
+     *
+     * Arguments and options have been parsed when this is run
+     *
+     * @param Options $options
+     * @return void
+     */
+    protected function main(Options $options)
+    {
+        if ($options->getOpt('keep')) {
+            $keep = explode(',', $options->getOpt('keep'));
+            if (!in_array('en', $keep)) $keep[] = 'en';
+        } elseif ($options->getOpt('english-only')) {
+            $keep = ['en'];
+        } else {
+            echo $options->help();
+            exit(0);
+        }
+
+        // Kill all language directories in /inc/lang and /lib/plugins besides those in $langs array
+        $this->stripDirLangs(realpath(__DIR__ . '/../inc/lang'), $keep);
+        $this->processExtensions(realpath(__DIR__ . '/../lib/plugins'), $keep);
+        $this->processExtensions(realpath(__DIR__ . '/../lib/tpl'), $keep);
     }
-    return $arg;
-}
 
-function processPlugins($path, $keep_langs) {
-    if (is_dir($path)) {
-        $entries = scandir($path);
+    /**
+     * Strip languages from extensions
+     *
+     * @param string $path path to plugin or template dir
+     * @param array $keep_langs languages to keep
+     */
+    protected function processExtensions($path, $keep_langs)
+    {
+        if (is_dir($path)) {
+            $entries = scandir($path);
 
-        foreach ($entries as $entry) {
-            if ($entry != "." && $entry != "..") {
-                if ( is_dir($path.'/'.$entry) ) {
+            foreach ($entries as $entry) {
+                if ($entry != "." && $entry != "..") {
+                    if (is_dir($path . '/' . $entry)) {
+                        $plugin_langs = $path . '/' . $entry . '/lang';
 
-                    $plugin_langs = $path.'/'.$entry.'/lang';
-
-                    if ( is_dir( $plugin_langs ) ) {
-                        stripDirLangs($plugin_langs, $keep_langs);
+                        if (is_dir($plugin_langs)) {
+                            $this->stripDirLangs($plugin_langs, $keep_langs);
+                        }
                     }
                 }
             }
         }
     }
-}
 
-function stripDirLangs($path, $keep_langs) {
-    $dir = dir($path);
+    /**
+     * Strip languages from path
+     *
+     * @param string $path path to lang dir
+     * @param array $keep_langs languages to keep
+     */
+    protected function stripDirLangs($path, $keep_langs)
+    {
+        $dir = dir($path);
 
-    while(($cur_dir = $dir->read()) !== false) {
-        if( $cur_dir != '.' and $cur_dir != '..' and is_dir($path.'/'.$cur_dir)) {
-
-            if ( !in_array($cur_dir, $keep_langs, true ) ) {
-                killDir($path.'/'.$cur_dir);
-            }
-        }
-    }
-    $dir->close();
-}
-
-function killDir($dir) {
-    if (is_dir($dir)) {
-        $entries = scandir($dir);
-
-        foreach ($entries as $entry) {
-            if ($entry != "." && $entry != "..") {
-                if ( is_dir($dir.'/'.$entry) ) {
-                    killDir($dir.'/'.$entry);
-                } else {
-                    unlink($dir.'/'.$entry);
+        while (($cur_dir = $dir->read()) !== false) {
+            if ($cur_dir != '.' && $cur_dir != '..' && is_dir($path . '/' . $cur_dir)) {
+                if (!in_array($cur_dir, $keep_langs, true)) {
+                    io_rmdir($path . '/' . $cur_dir, true);
                 }
             }
         }
-        reset($entries);
-        rmdir($dir);
+        $dir->close();
     }
 }
-#------------------------------------------------------------------------------
 
-// handle options
-$short_opts = 'hxk:e';
-$long_opts  = array('help', 'examples', 'keep=','english');
-
-$OPTS = Doku_Cli_Opts::getOptions(__FILE__, $short_opts, $long_opts);
-
-if ( $OPTS->isError() ) {
-    fwrite( STDERR, $OPTS->getMessage() . "\n");
-    exit(1);
-}
-
-// handle '--examples' option
-$show_examples = ( $OPTS->has('x') or $OPTS->has('examples') ) ? true : false;
-
-// handle '--help' option
-if ( $OPTS->has('h') or $OPTS->has('help') ) {
-    usage($show_examples);
-    exit(0);
-}
-
-// handle both '--keep' and '--english' options
-if ( $OPTS->has('k') or $OPTS->has('keep') ) {
-    $preserved_langs = getSuppliedArgument($OPTS,'k','keep');
-    $langs = explode(',', $preserved_langs);
-
-    // ! always enforce 'en' lang when using '--keep' (DW relies on it)
-    if ( !isset($langs['en']) ) {
-        $langs[]='en';
-    }
-} elseif ( $OPTS->has('e') or $OPTS->has('english') ) {
-    // '--english' was specified strip everything besides 'en'
-    $langs = array ('en');
-} else {
-    // no option was specified, print usage but don't do anything as
-    // this run might not be intented
-    usage();
-    print "\n
-    ERROR
-        No option specified, use either -h -x to get more info,
-        or -e to strip every language besides english.\n";
-    exit(1);
-}
-
-// Kill all language directories in /inc/lang and /lib/plugins besides those in $langs array
-stripDirLangs(realpath(dirname(__FILE__).'/../inc/lang'), $langs);
-processPlugins(realpath(dirname(__FILE__).'/../lib/plugins'), $langs);
+$cli = new StripLangsCLI();
+$cli->run();

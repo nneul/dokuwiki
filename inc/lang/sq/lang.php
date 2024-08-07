@@ -1,5 +1,8 @@
 <?php
+
 /**
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ *
  * sq language file
  *
  * This file was initially built by fetching translations from other
@@ -8,14 +11,17 @@
  * lines starting with @author
  *
  * @url http://svn.wikimedia.org/viewvc/mediawiki/trunk/phase3/languages/messages/MessagesSq.php?view=co
+ *
+ * @author Valdrin Jonuzi <valdrinj00@gmail.com>
+ * @author Endrit Callaki <endrit@callaki.de>
  * @author Leonard Elezi <leonard.elezi@depinfo.info>
  */
 $lang['encoding']              = 'utf-8';
 $lang['direction']             = 'ltr';
-$lang['doublequoteopening']    = '"';
-$lang['doublequoteclosing']    = '"';
-$lang['singlequoteopening']    = '\'';
-$lang['singlequoteclosing']    = '\'';
+$lang['doublequoteopening']    = '„';
+$lang['doublequoteclosing']    = '“';
+$lang['singlequoteopening']    = '‘';
+$lang['singlequoteclosing']    = '’';
 $lang['apostrophe']            = '\'';
 $lang['btn_edit']              = 'Redaktoni këtë faqe';
 $lang['btn_source']            = 'Trego kodin burim të faqes';
@@ -40,16 +46,21 @@ $lang['btn_update']            = 'Përditëso';
 $lang['btn_delete']            = 'Fshi';
 $lang['btn_back']              = 'Mbrapa';
 $lang['btn_backlink']          = 'Lidhjet këtu';
-$lang['btn_backtomedia']       = 'Mbrapa tek Përzgjedhja e Media-ve';
 $lang['btn_subscribe']         = 'Menaxho Abonimet';
 $lang['btn_profile']           = 'Përditëso Profilin';
 $lang['btn_reset']             = 'Rivendos';
+$lang['btn_resendpwd']         = 'Vendos fjalëkalim të ri';
 $lang['btn_draft']             = 'Redakto skicën';
 $lang['btn_recover']           = 'Rekupero skicën';
 $lang['btn_draftdel']          = 'Fshi skicën';
 $lang['btn_revert']            = 'Kthe si më parë';
 $lang['btn_register']          = 'Regjsitrohuni';
-$lang['loggedinas']            = 'Regjistruar si ';
+$lang['btn_apply']             = 'Dergo';
+$lang['btn_media']             = 'Menaxhimi i mediave';
+$lang['btn_deleteuser']        = 'Fshij llogarine';
+$lang['btn_img_backto']        = 'Mbrapa te %s';
+$lang['btn_mediaManager']      = 'Shiko tek menaxhimi i mediave';
+$lang['loggedinas']            = 'Regjistruar si :';
 $lang['user']                  = 'Nofka e përdoruesit:';
 $lang['pass']                  = 'Fjalëkalimi';
 $lang['newpass']               = 'Fjalëkalim i ri';
@@ -60,9 +71,30 @@ $lang['fullname']              = 'Emri i vërtetë';
 $lang['email']                 = 'Adresa e email-it*';
 $lang['profile']               = 'Profili i përdoruesit';
 $lang['badlogin']              = 'Na vjen keq, emri ose fjalëkalimi është gabim.';
+$lang['badpassconfirm']        = 'Me fal, fjalekalimi ishte i gabuar';
 $lang['minoredit']             = 'Ndryshime të Vogla';
 $lang['draftdate']             = 'Skica u ruajt automatikisht në';
 $lang['nosecedit']             = 'Faqja u ndryshua ndëwrkohë, informacioni i kwtij seksioni ishte i vjetër, u ngarkua faqja e tërë në vend të saj.';
+$lang['js']['willexpire']      = 'Kyçi juaj për redaktimin e kësaj faqeje është duke skaduar.\nPër të shmangur konflikte përdorni butonin Shiko Paraprakisht për të rivendosur kohën e kyçjes.';
+$lang['js']['notsavedyet']     = 'Ndryshimet e paruajtura do të humbasin.\nVazhdo me të vërtetë?';
+$lang['js']['searchmedia']     = 'Kërko për skedarë';
+$lang['js']['keepopen']        = 'Mbaje dritaren të hapur gjatë përzgjedhjes';
+$lang['js']['hidedetails']     = 'Fshih Detajet';
+$lang['js']['mediadisplay']    = 'Lloji i lidhjes';
+$lang['js']['mediaclose']      = 'Mbylle';
+$lang['js']['mediadisplayimg'] = 'Shiko foton';
+$lang['js']['mediadisplaylnk'] = 'Shiko vetem linkun';
+$lang['js']['mediasmall']      = 'Versioni i vegjel';
+$lang['js']['medialarge']      = 'Versioni i madh';
+$lang['js']['mediaoriginal']   = 'Versioni origjinal';
+$lang['js']['nosmblinks']      = 'Lidhja te Windows shares funksionon vetëm në Microsoft Internet Explorer. Ju prapë mund ta kopjoni dhe ngjitni linkun.';
+$lang['js']['linkwiz']         = 'Magjistari i Link';
+$lang['js']['linkto']          = 'Lidh tek:';
+$lang['js']['del_confirm']     = 'Fshiji vërtetë objektet e përzgjedhura?';
+$lang['js']['media_diff']      = 'Shih dallimet:';
+$lang['js']['media_select']    = 'Zgjedh dosjet...';
+$lang['js']['media_upload_btn'] = 'Ngarko';
+$lang['js']['media_drop']      = 'Lëshoji dosjet këtu për t\'i ngarkuar';
 $lang['regmissing']            = 'Na vjen keq, duhet të plotësoni të gjitha fushat.';
 $lang['reguexists']            = 'Na vjen keq, ekziston një përdorues tjetër me të njëjtin emër.';
 $lang['regsuccess']            = 'Përdoruesi u regjistrua dhe fjalëkalimi u dërgua me email.';
@@ -87,17 +119,14 @@ $lang['license']               = 'Përveç rasteve të përcaktuara, përmbajtja
 $lang['licenseok']             = 'Shënim: Duke redaktuar këtë faqe ju bini dakort të liçensoni përmbajtjen tuaj nën liçensën e mëposhtme:';
 $lang['searchmedia']           = 'Kërko emrin e skedarit:';
 $lang['searchmedia_in']        = 'Kërko në %s';
-$lang['txt_upload']            = 'Zgjidh skedarin për ngarkim';
-$lang['txt_filename']          = 'Ngarko si (alternative)';
+$lang['txt_upload']            = 'Zgjidh skedarin për ngarkim:';
+$lang['txt_filename']          = 'Ngarko si (alternative):';
 $lang['txt_overwrt']           = 'Zëvendëso skedarin ekzistues';
-$lang['lockedby']              = 'Kyçur momentalisht nga';
-$lang['lockexpire']            = 'Kyçi skadon në';
-$lang['js']['willexpire']            = 'Kyçi juaj për redaktimin e kësaj faqeje është duke skaduar.\nPër të shmangur konflikte përdorni butonin Shiko Paraprakisht për të rivendosur kohën e kyçjes.';
-$lang['js']['notsavedyet']     = 'Ndryshimet e paruajtura do të humbasin.\nVazhdo me të vërtetë?';
+$lang['lockedby']              = 'Kyçur momentalisht nga:';
+$lang['lockexpire']            = 'Kyçi skadon në:';
 $lang['rssfailed']             = 'Ndoshi një gabim gjatë kapjes së këtij lajmi:';
 $lang['nothingfound']          = 'Nuk u gjet asgjë.';
 $lang['mediaselect']           = 'Skedarët e Medias';
-$lang['fileupload']            = 'Ngarkoje';
 $lang['uploadsucc']            = 'Ngarkim i suksesshëm';
 $lang['uploadfail']            = 'Ngarkimi dështoi. Ndoshta leje të gabuara?';
 $lang['uploadwrong']           = 'Ngarkimi u refuzua! Prapashtesa e skedarit është e ndaluar!';
@@ -111,13 +140,6 @@ $lang['deletefail']            = '"%s" nuk mundi të fshihej. Kontrollo lejet.';
 $lang['mediainuse']            = 'Skedari "%s" nuk u fshi - është ende në përdorim.';
 $lang['namespaces']            = 'Hapësirat e Emrave';
 $lang['mediafiles']            = 'Skedarët e disponueshëm në';
-$lang['js']['searchmedia']     = 'Kërko për skedarë';
-$lang['js']['keepopen']        = 'Mbaje dritaren të hapur gjatë përzgjedhjes';
-$lang['js']['hidedetails']     = 'Fshih Detajet';
-$lang['js']['nosmblinks']      = 'Lidhja te Windows shares funksionon vetëm në Microsoft Internet Explorer. Ju prapë mund ta kopjoni dhe ngjitni linkun.';
-$lang['js']['linkwiz']         = 'Magjistari i Link';
-$lang['js']['linkto']          = 'Lidh tek:';
-$lang['js']['del_confirm']     = 'Fshiji vërtetë objektet e përzgjedhura?';
 $lang['mediausage']            = 'Përdor sintaksën e mëposhtme për të referuar këtë skedar:';
 $lang['mediaview']             = 'Shiko skedarin origjinal';
 $lang['mediaroot']             = 'rrënja';
@@ -134,16 +156,16 @@ $lang['yours']                 = 'Versioni Juaj';
 $lang['diff']                  = 'Trego ndryshimet nga rishikimet aktuale';
 $lang['diff2']                 = 'Trego ndryshimet mes rishikimeve të përzgjedhura';
 $lang['line']                  = 'Vijë';
-$lang['breadcrumb']            = 'Gjurmë';
-$lang['youarehere']            = 'Ju jeni këtu';
-$lang['lastmod']               = 'Redaktuar për herë të fundit';
+$lang['breadcrumb']            = 'Gjurmë:';
+$lang['youarehere']            = 'Ju jeni këtu:';
+$lang['lastmod']               = 'Redaktuar për herë të fundit:';
 $lang['by']                    = 'nga';
 $lang['deleted']               = 'u fshi';
 $lang['created']               = 'u krijua';
 $lang['restored']              = 'Kthehu tek një version i vjetër (%s)';
 $lang['external_edit']         = 'redaktim i jashtëm';
 $lang['summary']               = 'Përmbledhja redaktimit';
-$lang['noflash']               = 'Nevojitet <a href="http://www.adobe.com/products/flashplayer/">Adobe Flash Plugin</a> për të paraqitur këtë përmbajtje.';
+$lang['noflash']               = 'Nevojitet <a href="http://get.adobe.com/flashplayer">Adobe Flash Plugin</a> për të paraqitur këtë përmbajtje.';
 $lang['download']              = 'Shkarko Copën';
 $lang['mail_newpage']          = 'faqje u shtua:';
 $lang['mail_changed']          = 'faqja u ndryshua:';
@@ -175,21 +197,19 @@ $lang['qb_sig']                = 'Fut Firmën';
 $lang['qb_smileys']            = 'Smileys';
 $lang['qb_chars']              = 'Karaktere Speciale';
 $lang['upperns']               = 'kërce tek hapësira e emrit prind';
-$lang['admin_register']        = 'Shto Përdorues të Ri';
 $lang['metaedit']              = 'Redakto Metadata';
 $lang['metasaveerr']           = 'Shkrimi i metadata-ve dështoi';
 $lang['metasaveok']            = 'Metadata u ruajt';
-$lang['img_backto']            = 'Mbrapa te';
-$lang['img_title']             = 'Titulli ';
-$lang['img_caption']           = 'Titra';
-$lang['img_date']              = 'Data';
-$lang['img_fname']             = 'Emri Skedarit';
-$lang['img_fsize']             = 'Madhësia';
-$lang['img_artist']            = 'Autor';
-$lang['img_copyr']             = 'Mbajtësi i të drejtave të autorit';
-$lang['img_format']            = 'Formati';
-$lang['img_camera']            = 'Kamera';
-$lang['img_keywords']          = 'Fjalë Kyçe';
+$lang['img_title']             = 'Titulli :';
+$lang['img_caption']           = 'Titra:';
+$lang['img_date']              = 'Data:';
+$lang['img_fname']             = 'Emri Skedarit:';
+$lang['img_fsize']             = 'Madhësia:';
+$lang['img_artist']            = 'Autor:';
+$lang['img_copyr']             = 'Mbajtësi i të drejtave të autorit:';
+$lang['img_format']            = 'Formati:';
+$lang['img_camera']            = 'Kamera:';
+$lang['img_keywords']          = 'Fjalë Kyçe:';
 $lang['subscr_subscribe_success'] = 'Iu shtua %s listës së abonimeve për %s';
 $lang['subscr_subscribe_error'] = 'Gabim gjatë shtimit të %s listës së abonimeve për %s';
 $lang['subscr_subscribe_noaddress'] = 'Nuk ekziston asnjë adresë e lidhur me regjistrimin tuaj, ju nuk mund t\'i shtoheni listës së abonimeve.';
@@ -212,7 +232,7 @@ $lang['i_enableacl']           = 'Aktivizo ACL (rekomanduar)';
 $lang['i_superuser']           = 'Superpërdorues';
 $lang['i_problems']            = 'Installer-i gjeti disa probleme, të shfaqura më poshtë. Nuk mund të vazhdoni derisa t\'i keni rregulluar.';
 $lang['i_modified']            = 'Për arsye sigurie ky skript do të punojë vetëm me një instalim të ri dhe të pamodifikuar DokuWiki.
-Ose duhet të ekstraktoni skedarët nga e para nga pakoja e shkarkimit ose konsultohuni me <a href="http://dokuwiki.org/install">Dokuwiki installation instructions</a>';
+Ose duhet të ekstraktoni skedarët nga e para nga pakoja e shkarkimit ose konsultohuni me <a href="https://www.dokuwiki.org/install">Dokuwiki installation instructions</a>';
 $lang['i_funcna']              = 'Funksioni PHP <code>%s</code> nuk është i disponueshëm. Mbase siguruesi juaj i host-it e ka çaktivizuar për ndonjë arsye?';
 $lang['i_phpver']              = 'Versioni juaj i PHP <code>%s</code> është më i vogël se ai i duhuri <code>%s</code>. Duhet të përditësoni instalimin tuaj të PHP-së.';
 $lang['i_permfail']            = '<code>%s</code> nuk është e shkruajtshme nga DokuWiki. Duhet të rregulloni lejet e përdorimit për këtë direktori.';
@@ -235,3 +255,5 @@ $lang['days']                  = '%d ditë më parë';
 $lang['hours']                 = '%d orë më parë';
 $lang['minutes']               = '%d minuta më parë';
 $lang['seconds']               = '%d sekonda më parë';
+$lang['email_signature_text']  = 'Ky email u gjenerua nga DokuWiki në
+@DOKUWIKIURL@';
